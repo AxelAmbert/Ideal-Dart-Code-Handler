@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:async' as async;
 
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
@@ -11,13 +12,13 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 
-
+const flutterPath = r'C:\flutter\packages\flutter\lib';
 var file = {};
 final funcs = [];
 final classes = [];
 var theClasses = [];
 var i = 0;
-
+var lol = 0;
 
 class Haha extends TypeVisitor<void> {
   @override
@@ -49,7 +50,6 @@ class Haha extends TypeVisitor<void> {
   void visitVoidType(VoidType type) {
     // TODO: implement visitVoidType
   }
-
 }
 
 class Generalized extends GeneralizingAstVisitor<void> {
@@ -96,6 +96,7 @@ class FunctionVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
+    print('called ? $lol');
     funcs.add({
       'name': node.name.toString(),
       'parameters': getParameters(node),
@@ -136,11 +137,9 @@ class MethodVisitor extends SimpleAstVisitor<void> {
 }
 
 class Heritage extends SimpleAstVisitor<void> {
-
   @override
   void visitTypeName(TypeName node) {
     //print('Type name -> ${node}');
-
   }
 
   @override
@@ -148,56 +147,44 @@ class Heritage extends SimpleAstVisitor<void> {
     //print('Simple ? $node');
     node.visitChildren(Heritage());
   }
-
 }
 
 class ClassVisitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    //print('Je visite -> ${node.name}');
     final newClass = {'name': node.name.toString(), 'methods': []};
     theClasses.add(node.name.toString());
     //node.visitChildren(ClassVisitor());
-    //node.visitChildren(MethodVisitor(newClass));
-    //classes.add(newClass);
-  }
-  @override
-  void visitMethodDeclaration(MethodDeclaration node) {
+    node.visitChildren(MethodVisitor(newClass));
+    classes.add(newClass);
   }
 
   @override
-  void visitFunctionDeclaration(FunctionDeclaration node) {
-
-  }
+  void visitMethodDeclaration(MethodDeclaration node) {}
 
   @override
-  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
-  }
+  void visitFunctionDeclaration(FunctionDeclaration node) {}
 
   @override
-  void visitSimpleIdentifier(SimpleIdentifier node) {
-
-  }
+  void visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {}
 
   @override
-  void visitFieldDeclaration(FieldDeclaration node) {
-
-  }
-  @override
-  void visitConstructorDeclaration(ConstructorDeclaration node) {
-
-  }
+  void visitSimpleIdentifier(SimpleIdentifier node) {}
 
   @override
-  void visitTypeParameterList(TypeParameterList node) {
-  }
+  void visitFieldDeclaration(FieldDeclaration node) {}
+
+  @override
+  void visitConstructorDeclaration(ConstructorDeclaration node) {}
+
+  @override
+  void visitTypeParameterList(TypeParameterList node) {}
 
   @override
   void visitExtendsClause(ExtendsClause node) {
-
     //print('$node inherits ${node.superclass} -> ');
 
-    node.visitChildren(Heritage());
+    //node.visitChildren(Heritage());
   }
 
 /*
@@ -227,7 +214,7 @@ class ClassVisitor extends SimpleAstVisitor<void> {
     //print(node.selectedSource);
 
   }*/
-  /*
+/*
   @override
   void visitLibraryDirective(LibraryDirective node)
   {
@@ -241,11 +228,9 @@ class ClassVisitor extends SimpleAstVisitor<void> {
   }*/
 }
 
-class Thrower extends ThrowingAstVisitor<void>
-{
+class Thrower extends ThrowingAstVisitor<void> {
   @override
-  void visitLibraryDirective(LibraryDirective node)
-  {
+  void visitLibraryDirective(LibraryDirective node) {
     node.visitChildren(ClassVisitor());
     print("Lib");
   }
@@ -274,39 +259,60 @@ void main(List<String> arguments) async {
   }
 }*/
 
-void analyzeSingleFile(AnalysisContext context, String path) {
+Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
+  ResolvedUnitResult  placeholder;
+
+  print('I handle $path');
+  if (path.startsWith(flutterPath)) {
+    print('Lets go parsed.');
+    return (session.getParsedUnit(path).unit);
+  } else {
+    print('Its resolved');
+    placeholder = await session.getResolvedUnit(path);
+    return (placeholder.unit);
+  }
+}
+
+async.Future analyzeSingleFile(AnalysisContext context, String path) async {
   AnalysisSession session = context.currentSession;
-  ParsedUnitResult result = session.getParsedUnit(path);
-  CompilationUnit unit = result.unit;
+  CompilationUnit unit = await getUnit(path, session);
 
   unit.visitChildren(ClassVisitor());
+  unit.visitChildren(FunctionVisitor());
   print('Analysis of $path is finished.');
 }
 
-void analyzeAllFiles(AnalysisContextCollection collection) {
+async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
   var i = 0;
+
   for (AnalysisContext context in collection.contexts) {
+    // To get the current path -> print('Salut ${context.workspace.root} - $i');
     for (String path in context.contextRoot.analyzedFiles()) {
-      analyzeSingleFile(context, path);
+      await analyzeSingleFile(context, path);
       i++;
     }
   }
   print('Number of analyzed files ? $i');
 }
 
-
-void printarr() {
+void printEverything() {
   final filename = 'classes.txt';
   new File(filename).writeAsString(theClasses.join('\n'));
+
+  file = {'funcs': funcs, 'classes': classes};
+  new File("data.json").writeAsString(jsonEncode(file));
 }
 
-void main() {
+void main() async {
   List<String> includedPaths = [];
   var collection;
 
-  includedPaths.add(r'C:\flutter\packages\flutter\lib');
+  //includedPaths.add(r'C:\flutter\packages\flutter\lib');
+  includedPaths.add(
+      r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
   collection = AnalysisContextCollection(includedPaths: includedPaths);
 
-  analyzeAllFiles(collection);
-  printarr();
+  await analyzeAllFiles(collection);
+  printEverything();
+  print("done");
 }

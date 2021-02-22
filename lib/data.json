@@ -1,0 +1,89 @@
+{
+  "funcs": [
+    {
+      "name": "main",
+      "parameters": [],
+      "return": "void",
+      "annotations": [],
+      "code": "{}"
+    },
+    {
+      "name": "mdr",
+      "parameters": [
+        {
+          "type": "int",
+          "name": "lol"
+        },
+        {
+          "type": "String",
+          "name": "hihi"
+        }
+      ],
+      "return": "int",
+      "annotations": [
+        {
+          "name": "CodeLink",
+          "parameters": [
+            {
+              "type": "bool",
+              "value": "true"
+            }
+          ]
+        },
+        {
+          "name": "Callback",
+          "parameters": [
+            {
+              "type": "String",
+              "value": "\"ok\""
+            },
+            {
+              "type": "String",
+              "value": "\"voila\""
+            }
+          ]
+        }
+      ],
+      "code": "{return (1);}"
+    }
+  ],
+  "classes": [
+    {
+      "name": "theClass",
+      "methods": []
+    },
+    {
+      "name": "Callback",
+      "methods": []
+    },
+    {
+      "name": "CodeLink",
+      "methods": []
+    },
+    {
+      "name": "Mdr",
+      "methods": [
+        {
+          "name": "memfunczeubi",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "a"
+            },
+            {
+              "type": "int",
+              "name": "mdr"
+            }
+          ],
+          "return": "T",
+          "annotations": [],
+          "code": "{print(\"haha!\"); var i = 0; print(i); return (this.lol);}"
+        }
+      ]
+    },
+    {
+      "name": "testImport",
+      "methods": []
+    }
+  ]
+}
