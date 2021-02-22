@@ -16,46 +16,29 @@ const flutterPath = r'C:\flutter\packages\flutter\lib';
 var file = {};
 final funcs = [];
 final classes = [];
-var theClasses = [];
-var i = 0;
-var lol = 0;
+var theClasses = {};
+var inheritanceTree = {};
 
-class Haha extends TypeVisitor<void> {
-  @override
-  void visitDynamicType(DynamicType type) {
-    // TODO: implement visitDynamicType
+String constructInheritance(String toFind)
+{
+  final inherited = theClasses[toFind];
+  if (inherited == null || inherited == 'null') {
+    return (toFind);
   }
-
-  @override
-  void visitFunctionType(FunctionType type) {
-    // TODO: implement visitFunctionType
-  }
-
-  @override
-  void visitInterfaceType(InterfaceType type) {
-    // TODO: implement visitInterfaceType
-  }
-
-  @override
-  void visitNeverType(NeverType type) {
-    // TODO: implement visitNeverType
-  }
-
-  @override
-  void visitTypeParameterType(TypeParameterType type) {
-    // TODO: implement visitTypeParameterType
-  }
-
-  @override
-  void visitVoidType(VoidType type) {
-    // TODO: implement visitVoidType
-  }
+  return (toFind + '/' + constructInheritance(inherited));
 }
 
-class Generalized extends GeneralizingAstVisitor<void> {
+void inheritanceTreeReconstruction() {
+  theClasses.forEach((key, value) {
+    inheritanceTree[key] = constructInheritance(value);
+  });
+
+}
+
+class GetAnnotationTypes extends GeneralizingAstVisitor<void> {
   final param;
 
-  Generalized(this.param);
+  GetAnnotationTypes(this.param);
 
   @override
   void visitLiteral(Literal literal) {
@@ -70,20 +53,20 @@ List<dynamic> getAnnotations(NodeList<Annotation> annotationsList) {
   for (final metadata in annotationsList) {
     final arr = [];
 
-    metadata.visitChildren(Generalized(arr));
+    metadata.visitChildren(GetAnnotationTypes(arr));
     annotations.add({'name': metadata.name.toString(), 'parameters': arr});
   }
 
   return (annotations);
 }
 
-class FunctionVisitor extends SimpleAstVisitor<void> {
+class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
   List<dynamic> getParameters(FunctionDeclaration node) {
     final params = [];
     final parameterTypes = node.functionExpression.parameters.parameterElements
         .map((e) => e.type.getDisplayString(withNullability: false));
     final identifierNames =
-        node.functionExpression.parameters.parameters.map((e) => e.identifier);
+    node.functionExpression.parameters.parameters.map((e) => e.identifier);
 
     for (var i = 0; i < parameterTypes.length; i++) {
       params.add({
@@ -96,7 +79,6 @@ class FunctionVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
-    print('called ? $lol');
     funcs.add({
       'name': node.name.toString(),
       'parameters': getParameters(node),
@@ -107,16 +89,17 @@ class FunctionVisitor extends SimpleAstVisitor<void> {
   }
 }
 
-class MethodVisitor extends SimpleAstVisitor<void> {
+class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
   final newClass;
 
-  MethodVisitor(this.newClass);
+  ResolvedMethodVisitor(this.newClass);
 
   List<dynamic> getParameters(MethodDeclaration node) {
-    final parameterTypes = node.parameters.parameterElements.map((e) => {
-          'type': e.type.getDisplayString(withNullability: false),
-          'name': e.name.toString()
-        });
+    final parameterTypes = node.parameters.parameterElements.map((e) =>
+    {
+      'type': e.type.getDisplayString(withNullability: false),
+      'name': e.name.toString()
+    });
 
     return (parameterTypes.toList());
   }
@@ -149,30 +132,55 @@ class Heritage extends SimpleAstVisitor<void> {
   }
 }
 
-class ClassVisitor extends SimpleAstVisitor<void> {
+class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     final newClass = {'name': node.name.toString(), 'methods': []};
-    theClasses.add(node.name.toString());
+
     //node.visitChildren(ClassVisitor());
-    node.visitChildren(MethodVisitor(newClass));
+    node.visitChildren(ResolvedMethodVisitor(newClass));
     classes.add(newClass);
+  }
+
+}
+
+class UnresolvedClassVisitor extends SimpleAstVisitor {
+
+
+  @override
+  void visitClassDeclaration(ClassDeclaration node) {
+    if (node.extendsClause != null) {
+      theClasses[node.name.toString()] = node.extendsClause.superclass.toString();
+    } else {
+      theClasses[node.name.toString()] = 'null';
+    }
   }
 
 }
 
 
 Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
-  ResolvedUnitResult  placeholder;
+  ResolvedUnitResult placeholder;
 
-  print('I handle $path');
+  //print('I handle $path');
   if (path.startsWith(flutterPath)) {
-    print('Lets go parsed.');
-    return (session.getParsedUnit(path).unit);
+    //print('Lets go parsed.');
+    return (session
+        .getParsedUnit(path)
+        .unit);
   } else {
-    print('Its resolved');
+    //print('Its resolved');
     placeholder = await session.getResolvedUnit(path);
     return (placeholder.unit);
+  }
+}
+
+void handleVisit(CompilationUnit unit, String path) {
+  if (path.startsWith(flutterPath)) {
+    unit.visitChildren(UnresolvedClassVisitor());
+  } else {
+    unit.visitChildren(ResolvedClassVisitor());
+    unit.visitChildren(ResolvedFunctionVisitor());
   }
 }
 
@@ -180,27 +188,25 @@ async.Future analyzeSingleFile(AnalysisContext context, String path) async {
   AnalysisSession session = context.currentSession;
   CompilationUnit unit = await getUnit(path, session);
 
-  unit.visitChildren(ClassVisitor());
-  unit.visitChildren(FunctionVisitor());
-  print('Analysis of $path is finished.');
+  handleVisit(unit, path);
+ // print('Analysis of $path is finished.');
 }
 
 async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
-  var i = 0;
 
   for (AnalysisContext context in collection.contexts) {
     // To get the current path -> print('Salut ${context.workspace.root} - $i');
     for (String path in context.contextRoot.analyzedFiles()) {
       await analyzeSingleFile(context, path);
-      i++;
     }
   }
-  print('Number of analyzed files ? $i');
 }
 
 void printEverything() {
-  final filename = 'classes.txt';
-  new File(filename).writeAsString(theClasses.join('\n'));
+  final filename = 'classes.json';
+  new File(filename).writeAsString(jsonEncode(theClasses));
+
+  new File('inheritance.json').writeAsString(jsonEncode(inheritanceTree));
 
   file = {'funcs': funcs, 'classes': classes};
   new File("data.json").writeAsString(jsonEncode(file));
@@ -210,12 +216,11 @@ void main() async {
   List<String> includedPaths = [];
   var collection;
 
-  //includedPaths.add(r'C:\flutter\packages\flutter\lib');
-  includedPaths.add(
-      r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
+  includedPaths.add(r'C:\flutter\packages\flutter\lib');
+  includedPaths.add(r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
   collection = AnalysisContextCollection(includedPaths: includedPaths);
 
   await analyzeAllFiles(collection);
+  inheritanceTreeReconstruction();
   printEverything();
-  print("done");
 }
