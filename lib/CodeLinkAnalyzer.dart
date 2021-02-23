@@ -212,11 +212,31 @@ void printEverything() {
   new File("data.json").writeAsString(jsonEncode(file));
 }
 
+String getFlutterPath()
+{
+  final env = Platform.environment['PATH']?.split(';') ?? [];
+  final realPath = Platform.pathSeparator + 'packages' + Platform.pathSeparator
+                 + 'flutter' + Platform.pathSeparator + 'lib';
+  var flutterPath = '';
+
+  if (env.isEmpty) {
+    return 'not found';
+  }
+
+  env.forEach((element) {
+    if (element.contains('flutter' + Platform.pathSeparator + 'bin')) {
+      flutterPath = element.replaceFirst(Platform.pathSeparator + 'bin', realPath);
+    }
+  });
+  return (flutterPath);
+}
+
 void main() async {
   List<String> includedPaths = [];
   var collection;
 
-  includedPaths.add(r'C:\flutter\packages\flutter\lib');
+
+  includedPaths.add(getFlutterPath());
   includedPaths.add(r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
   collection = AnalysisContextCollection(includedPaths: includedPaths);
 
