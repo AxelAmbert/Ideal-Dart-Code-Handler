@@ -12,7 +12,7 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 
-const flutterPath = r'C:\flutter\packages\flutter\lib';
+var flutterPath = '';
 var file = {};
 final funcs = [];
 final classes = [];
@@ -222,8 +222,8 @@ void main() async {
   var includedPaths = <String>[];
   var collection;
 
-
-  includedPaths.add(getFlutterPath());
+  flutterPath = getFlutterPath();
+  includedPaths.add(flutterPath);
   includedPaths.add(r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
   collection = AnalysisContextCollection(includedPaths: includedPaths);
 
