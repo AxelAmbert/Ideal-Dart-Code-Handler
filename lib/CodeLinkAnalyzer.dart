@@ -124,7 +124,6 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   void visitClassDeclaration(ClassDeclaration node) {
     final newClass = {'name': node.name.toString(), 'methods': []};
 
-    //node.visitChildren(ClassVisitor());
     node.visitChildren(ResolvedMethodVisitor(newClass));
     classes.add(newClass);
   }
@@ -156,14 +155,9 @@ void handleVisit(CompilationUnit unit, String path) {
 Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
   ResolvedUnitResult placeholder;
 
-  //print('I handle $path');
   if (path.startsWith(flutterPath)) {
-    //print('Lets go parsed.');
-    return (session
-        .getParsedUnit(path)
-        .unit);
+    return (session.getParsedUnit(path).unit);
   } else {
-    //print('Its resolved');
     placeholder = await session.getResolvedUnit(path);
     return (placeholder.unit);
   }
@@ -176,7 +170,6 @@ async.Future analyzeSingleFile(AnalysisContext context, String path) async {
   CompilationUnit unit = await getUnit(path, session);
 
   handleVisit(unit, path);
- // print('Analysis of $path is finished.');
 }
 
 async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
