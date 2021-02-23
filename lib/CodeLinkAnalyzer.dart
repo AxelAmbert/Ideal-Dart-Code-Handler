@@ -119,19 +119,6 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
   }
 }
 
-class Heritage extends SimpleAstVisitor<void> {
-  @override
-  void visitTypeName(TypeName node) {
-    //print('Type name -> ${node}');
-  }
-
-  @override
-  void visitSimpleIdentifier(SimpleIdentifier node) {
-    //print('Simple ? $node');
-    node.visitChildren(Heritage());
-  }
-}
-
 class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -146,7 +133,6 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
 
 class UnresolvedClassVisitor extends SimpleAstVisitor {
 
-
   @override
   void visitClassDeclaration(ClassDeclaration node) {
     if (node.extendsClause != null) {
@@ -158,6 +144,14 @@ class UnresolvedClassVisitor extends SimpleAstVisitor {
 
 }
 
+void handleVisit(CompilationUnit unit, String path) {
+  if (path.startsWith(flutterPath)) {
+    unit.visitChildren(UnresolvedClassVisitor());
+  } else {
+    unit.visitChildren(ResolvedClassVisitor());
+    unit.visitChildren(ResolvedFunctionVisitor());
+  }
+}
 
 Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
   ResolvedUnitResult placeholder;
@@ -175,14 +169,7 @@ Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
   }
 }
 
-void handleVisit(CompilationUnit unit, String path) {
-  if (path.startsWith(flutterPath)) {
-    unit.visitChildren(UnresolvedClassVisitor());
-  } else {
-    unit.visitChildren(ResolvedClassVisitor());
-    unit.visitChildren(ResolvedFunctionVisitor());
-  }
-}
+
 
 async.Future analyzeSingleFile(AnalysisContext context, String path) async {
   AnalysisSession session = context.currentSession;
@@ -195,7 +182,7 @@ async.Future analyzeSingleFile(AnalysisContext context, String path) async {
 async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
 
   for (AnalysisContext context in collection.contexts) {
-    // To get the current path -> print('Salut ${context.workspace.root} - $i');
+
     for (String path in context.contextRoot.analyzedFiles()) {
       await analyzeSingleFile(context, path);
     }
@@ -232,7 +219,7 @@ String getFlutterPath()
 }
 
 void main() async {
-  List<String> includedPaths = [];
+  var includedPaths = <String>[];
   var collection;
 
 
