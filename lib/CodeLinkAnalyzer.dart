@@ -5,17 +5,17 @@ import 'dart:async' as async;
 import 'package:analyzer/dart/analysis/utilities.dart';
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
-import 'package:analyzer/dart/element/type.dart';
-import 'package:analyzer/dart/element/type_visitor.dart';
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
 import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
+import 'package:analyzer/dart/constant/value.dart';
 
 var flutterPath = '';
 var file = {};
 final funcs = [];
 final classes = [];
+final variables = [];
 var theClasses = {};
 var inheritanceTree = {};
 
@@ -60,18 +60,66 @@ List<dynamic> getAnnotations(NodeList<Annotation> annotationsList) {
   return (annotations);
 }
 
+String getComputedValue(VariableDeclaration element)
+{
+  final type = element.declaredElement.computeConstantValue();
+  
+  if (type.hasKnownValue == false)
+    return ('');
+  else if (type.toBoolValue() != null)
+    return (type.toBoolValue().toString());
+  else if (type.toStringValue() != null)
+    return (type.toStringValue());
+  else if (type.toIntValue() != null)
+    return (type.toIntValue().toString());
+  return ('');
+}
+
+
+class TopLevelVariableVisitor extends SimpleAstVisitor<void> {
+  @override
+  visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+    node.variables.variables.forEach((element) {
+      variables.add({
+        'name': element.name.toString(),
+        'type': element.declaredElement.type.toString(),
+        'value': getComputedValue(element)
+      });
+    });
+  }
+}
+
 class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
+
+  dynamic getIdentifierInfos(FunctionDeclaration node)
+  {
+    final values = node.functionExpression.parameters.parameters.map((e) {
+      final v = {};
+
+      v['id'] = e.identifier;
+      v['isNamed'] = e.isNamed;
+      v['isRequired'] = e.isRequired;
+      return (v);
+    });
+
+    return (values);
+  }
+
   List<dynamic> getParameters(FunctionDeclaration node) {
     final params = [];
     final parameterTypes = node.functionExpression.parameters.parameterElements
         .map((e) => e.type.getDisplayString(withNullability: false));
-    final identifierNames =
-    node.functionExpression.parameters.parameters.map((e) => e.identifier);
+    final identifierInfos = getIdentifierInfos(node);
+
 
     for (var i = 0; i < parameterTypes.length; i++) {
+      final info = identifierInfos.elementAt(i);
+
       params.add({
         'type': parameterTypes.elementAt(i).toString(),
-        'name': identifierNames.elementAt(i).toString()
+        'name': info['id'].toString(),
+        'isNamed': info['isNamed'].toString(),
+        'isRequired': info['isRequired'].toString()
       });
     }
     return (params);
@@ -149,6 +197,7 @@ void handleVisit(CompilationUnit unit, String path) {
   } else {
     unit.visitChildren(ResolvedClassVisitor());
     unit.visitChildren(ResolvedFunctionVisitor());
+    unit.visitChildren(TopLevelVariableVisitor());
   }
 }
 
@@ -188,7 +237,7 @@ void printEverything() {
 
   new File('inheritance.json').writeAsString(jsonEncode(inheritanceTree));
 
-  file = {'funcs': funcs, 'classes': classes};
+  file = {'funcs': funcs, 'classes': classes, 'var': variables};
   new File("data.json").writeAsString(jsonEncode(file));
 }
 
