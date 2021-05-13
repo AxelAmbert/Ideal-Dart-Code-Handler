@@ -11,3 +11,9 @@ class CodeLink {
 
   const CodeLink(this.visibility);
 }
+
+class CallbackParameter {
+  final int paramNb;
+  final bool isCallback;
+  const CallbackParameter(this.paramNb, this.isCallback);
+}

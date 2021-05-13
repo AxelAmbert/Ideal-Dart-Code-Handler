@@ -1,0 +1,220 @@
+{
+  "funcs": [
+    {
+      "name": "bool_Int__String",
+      "parameters": [
+        {
+          "type": "bool",
+          "name": "val",
+          "isNamed": "false",
+          "isRequired": "false"
+        },
+        {
+          "type": "int",
+          "name": "lol",
+          "isNamed": "false",
+          "isRequired": "false"
+        }
+      ],
+      "return": "String",
+      "annotations": []
+    },
+    {
+      "name": "String__Bool",
+      "parameters": [
+        {
+          "type": "String",
+          "name": "name",
+          "isNamed": "true",
+          "isRequired": "false"
+        }
+      ],
+      "return": "bool",
+      "annotations": []
+    },
+    {
+      "name": "String_Int__Int",
+      "parameters": [
+        {
+          "type": "String",
+          "name": "source",
+          "isNamed": "false",
+          "isRequired": "true"
+        },
+        {
+          "type": "int",
+          "name": "toAdd",
+          "isNamed": "false",
+          "isRequired": "true"
+        }
+      ],
+      "return": "int",
+      "annotations": [
+        {
+          "name": "CodeLink",
+          "parameters": [
+            {
+              "type": "bool",
+              "value": "true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Callback_Int_Callback__Int",
+      "parameters": [
+        {
+          "type": "Function",
+          "name": "func",
+          "isNamed": "false",
+          "isRequired": "true"
+        },
+        {
+          "type": "int",
+          "name": "ok",
+          "isNamed": "false",
+          "isRequired": "true"
+        },
+        {
+          "type": "Function",
+          "name": "secondFunc",
+          "isNamed": "false",
+          "isRequired": "true"
+        }
+      ],
+      "return": "int",
+      "annotations": [
+        {
+          "name": "CallbackParameter",
+          "parameters": [
+            {
+              "type": "int",
+              "value": "1"
+            },
+            {
+              "type": "bool",
+              "value": "true"
+            }
+          ]
+        },
+        {
+          "name": "CallbackParameter",
+          "parameters": [
+            {
+              "type": "int",
+              "value": "3"
+            },
+            {
+              "type": "bool",
+              "value": "true"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "main",
+      "parameters": [],
+      "return": "void",
+      "annotations": []
+    }
+  ],
+  "classes": [
+    {
+      "name": "theClass",
+      "methods": [],
+      "constructors": [
+        {
+          "isMainConstructor": true,
+          "name": null,
+          "parameters": [
+            {
+              "type": "bool",
+              "name": "visibility"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "RandomClass",
+      "methods": [
+        {
+          "name": "Int_Int__TemplateT",
+          "parameters": [
+            {
+              "type": "int",
+              "name": "a"
+            },
+            {
+              "type": "int",
+              "name": "mdr"
+            }
+          ],
+          "return": "T",
+          "annotations": []
+        }
+      ],
+      "constructors": [
+        {
+          "isMainConstructor": true,
+          "name": null,
+          "parameters": [
+            {
+              "type": "T",
+              "name": "variable"
+            }
+          ]
+        },
+        {
+          "isMainConstructor": false,
+          "name": "testOtherConstructor",
+          "parameters": [
+            {
+              "type": "T",
+              "name": "variable"
+            },
+            {
+              "type": "int",
+              "name": "i"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "testImport",
+      "methods": [],
+      "constructors": [
+        {
+          "isMainConstructor": true,
+          "name": null,
+          "parameters": [
+            {
+              "type": "bool",
+              "name": "visibility"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "constValues": [
+    {
+      "name": "a",
+      "type": "bool",
+      "value": "true"
+    },
+    {
+      "name": "i",
+      "type": "int",
+      "value": "314"
+    },
+    {
+      "name": "stringValue",
+      "type": "String",
+      "value": "a random value..."
+    }
+  ]
+}
