@@ -19,6 +19,13 @@ final variables = [];
 var theClasses = {};
 var inheritanceTree = {};
 var deepFlutterAnalysis = false;
+var verbose = false;
+
+void printDebug(String toPrint) {
+  if (verbose) {
+    print(toPrint);
+  }
+}
 
 String constructInheritance(String toFind)
 {
@@ -99,7 +106,7 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
 
       v['id'] = e.identifier;
       v['isNamed'] = e.isNamed;
-      v['isRequired'] = e.isRequired;
+      v['isRequired'] = e.isRequired.toString();
       return (v);
     });
 
@@ -151,7 +158,8 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
     final parameterTypes = list.parameterElements.map((e) =>
     {
       'type': e.type.getDisplayString(withNullability: false),
-      'name': e.name.toString()
+      'name': e.name.toString(),
+      'isRequired': e.hasRequired.toString(),
     });
 
     return (parameterTypes.toList());
@@ -163,8 +171,8 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
 
     try {
       arr.add({
-        'isMainConstructor': node.name == null ? true : false,
-        'name': node.name?.toString(),
+        'isMainConstructor': node.name == null ? 'true' : 'false',
+        'name': node.name != null ? node.name.toString() : 'null',
         'parameters': getParameters(node.parameters)
       });
     } catch (e) {
@@ -254,12 +262,12 @@ async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
   for (AnalysisContext context in collection.contexts) {
 
     for (String path in context.contextRoot.analyzedFiles()) {
-      //print('Analyzing ${path}');
+      printDebug('Analyzing ${path}');
       if (path.endsWith(".dart") == false) {
         continue;
       }
       await analyzeSingleFile(context, path);
-      //print('End of the analyzis of ${path}');
+      printDebug('End of the analyzis of ${path}');
     }
   }
 }
@@ -293,14 +301,22 @@ String getFlutterPath()
   return (flutterPath);
 }
 
+void handleProgramArguments(List<String> arguments) {
+  if (arguments.contains('deep')) {
+    print('Deep analysis enabled');
+    deepFlutterAnalysis = true;
+  }
+  if (arguments.contains('verbose')) {
+    print('Verbose mode enabled');
+    verbose = true;
+  }
+}
+
 void main(List<String> arguments) async {
   var includedPaths = <String>[];
   var collection;
 
-  if (arguments.isNotEmpty && arguments.first == 'deep') {
-    print('Deep analysis enabled');
-    deepFlutterAnalysis = true;
-  }
+  handleProgramArguments(arguments);
   flutterPath = getFlutterPath();
   includedPaths.add(flutterPath);
   includedPaths.add(r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
