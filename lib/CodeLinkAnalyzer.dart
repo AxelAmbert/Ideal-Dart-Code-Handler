@@ -11,6 +11,7 @@ import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 import 'package:analyzer/dart/constant/value.dart';
 
+
 var flutterPath = '';
 var file = {};
 final funcs = [];
@@ -18,14 +19,15 @@ final classes = [];
 final variables = [];
 var theClasses = {};
 var inheritanceTree = {};
-var deepFlutterAnalysis = false;
-var verbose = false;
+var programArgs = {};
 
-void printDebug(String toPrint) {
-  if (verbose) {
+void printDebug(String toPrint)
+{
+  if (programArgs['verbose'] == true) {
     print(toPrint);
   }
 }
+
 
 String constructInheritance(String toFind)
 {
@@ -116,12 +118,13 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
   List<dynamic> getParameters(FunctionDeclaration node) {
     final params = [];
     final parameterTypes = node.functionExpression.parameters.parameterElements
-        .map((e) => e.type.getDisplayString(withNullability: false));
+        .map((e) =>  e.type.getDisplayString(withNullability: false));
     final identifierInfos = getIdentifierInfos(node);
 
 
     for (var i = 0; i < parameterTypes.length; i++) {
       final info = identifierInfos.elementAt(i);
+
 
       params.add({
         'type': parameterTypes.elementAt(i).toString(),
@@ -159,7 +162,7 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
     {
       'type': e.type.getDisplayString(withNullability: false),
       'name': e.name.toString(),
-      'isRequired': e.hasRequired.toString(),
+      'isRequired': (e.hasRequired || e.isRequiredNamed || e.isRequiredPositional).toString(),
     });
 
     return (parameterTypes.toList());
@@ -202,9 +205,37 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
 }
 
 class ResolvedClassVisitor extends SimpleAstVisitor<void> {
+
+  final String path;
+
+  ResolvedClassVisitor(this.path);
+
+  String removePrefixFromPath(String path) {
+    final separator = Platform.pathSeparator;
+
+    if (path.startsWith(flutterPath)) {
+      var builder = path.replaceAll(flutterPath, '');
+      var split = builder.split(separator);
+
+      if (split.length < 4) {
+        printDebug('For ${split} it is ${split.length}');
+        return path;
+      }
+      builder = 'package:flutter/' + split[2] + '.dart';
+      return (builder);
+    }
+    return (path);
+  }
+  
   @override
   void visitClassDeclaration(ClassDeclaration node) {
-    final newClass = {'name': node.name.toString(), 'methods': [], 'constructors': []};
+    final newClass = {
+      'name': node.name.toString(),
+      'methods': [],
+      'constructors': [],
+      'path': path,
+      'import': removePrefixFromPath(path),
+    };
 
     node.visitChildren(ResolvedMethodVisitor(newClass));
     classes.add(newClass);
@@ -226,10 +257,10 @@ class UnresolvedClassVisitor extends SimpleAstVisitor {
 }
 
 void handleVisit(CompilationUnit unit, String path) {
-  if (path.startsWith(flutterPath) && deepFlutterAnalysis == false) {
+  if (path.startsWith(flutterPath) && programArgs['deepFlutterAnalysis'] == false) {
     unit.visitChildren(UnresolvedClassVisitor());
   } else {
-    unit.visitChildren(ResolvedClassVisitor());
+    unit.visitChildren(ResolvedClassVisitor(path));
     unit.visitChildren(ResolvedFunctionVisitor());
     unit.visitChildren(TopLevelVariableVisitor());
   }
@@ -238,7 +269,7 @@ void handleVisit(CompilationUnit unit, String path) {
 Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
   ResolvedUnitResult placeholder;
 
-  if (path.startsWith(flutterPath) && deepFlutterAnalysis == false) {
+  if (path.startsWith(flutterPath) && programArgs['deepFlutterAnalysis'] == false) {
     return (session.getParsedUnit(path).unit);
   } else {
     placeholder = await session.getResolvedUnit(path);
@@ -301,25 +332,40 @@ String getFlutterPath()
   return (flutterPath);
 }
 
-void handleProgramArguments(List<String> arguments) {
+Map<String, dynamic> handleProgramArguments(List<String> arguments) {
+  var args = <String, dynamic>{};
+
+  args['path'] = arguments[0];
   if (arguments.contains('deep')) {
     print('Deep analysis enabled');
-    deepFlutterAnalysis = true;
+    args['deepFlutterAnalysis'] = true;
+  } else {
+    args['deepFlutterAnalysis'] = false;
   }
+
   if (arguments.contains('verbose')) {
     print('Verbose mode enabled');
-    verbose = true;
+    args['verbose'] = true;
+  } else {
+    args['verbose'] = false;
   }
+  return (args);
 }
+
+/*
+TODO make it works by giving a path as a param
+ +
+ adding a param FIND_FLUTTER_PATH
+ */
 
 void main(List<String> arguments) async {
   var includedPaths = <String>[];
   var collection;
 
-  handleProgramArguments(arguments);
+  programArgs = handleProgramArguments(arguments);
   flutterPath = getFlutterPath();
   includedPaths.add(flutterPath);
-  includedPaths.add(r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
+  includedPaths.add(programArgs['path']);//r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir');
   collection = AnalysisContextCollection(includedPaths: includedPaths);
 
   await analyzeAllFiles(collection);

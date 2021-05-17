@@ -122,20 +122,42 @@
   ],
   "classes": [
     {
+      "name": "testImport",
+      "methods": [],
+      "constructors": [
+        {
+          "isMainConstructor": "true",
+          "name": "null",
+          "parameters": [
+            {
+              "type": "bool",
+              "name": "visibility",
+              "isRequired": "true"
+            }
+          ]
+        }
+      ],
+      "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\test2.dart",
+      "import": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\test2.dart"
+    },
+    {
       "name": "theClass",
       "methods": [],
       "constructors": [
         {
-          "isMainConstructor": true,
-          "name": null,
+          "isMainConstructor": "true",
+          "name": "null",
           "parameters": [
             {
               "type": "bool",
-              "name": "visibility"
+              "name": "visibility",
+              "isRequired": "true"
             }
           ]
         }
-      ]
+      ],
+      "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart",
+      "import": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart"
     },
     {
       "name": "RandomClass",
@@ -145,11 +167,13 @@
           "parameters": [
             {
               "type": "int",
-              "name": "a"
+              "name": "a",
+              "isRequired": "true"
             },
             {
               "type": "int",
-              "name": "mdr"
+              "name": "mdr",
+              "isRequired": "true"
             }
           ],
           "return": "T",
@@ -158,46 +182,98 @@
       ],
       "constructors": [
         {
-          "isMainConstructor": true,
-          "name": null,
+          "isMainConstructor": "true",
+          "name": "null",
           "parameters": [
             {
               "type": "T",
-              "name": "variable"
+              "name": "variable",
+              "isRequired": "true"
             }
           ]
         },
         {
-          "isMainConstructor": false,
+          "isMainConstructor": "false",
           "name": "testOtherConstructor",
           "parameters": [
             {
               "type": "T",
-              "name": "variable"
+              "name": "variable",
+              "isRequired": "true"
             },
             {
               "type": "int",
-              "name": "i"
+              "name": "i",
+              "isRequired": "true"
             }
           ]
         }
-      ]
+      ],
+      "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart",
+      "import": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart"
     },
     {
-      "name": "testImport",
+      "name": "One",
       "methods": [],
       "constructors": [
         {
-          "isMainConstructor": true,
-          "name": null,
+          "isMainConstructor": "true",
+          "name": "null",
           "parameters": [
             {
+              "type": "String",
+              "name": "one",
+              "isRequired": "true"
+            },
+            {
+              "type": "dynamic",
+              "name": "two",
+              "isRequired": "false"
+            },
+            {
+              "type": "String",
+              "name": "three",
+              "isRequired": "false"
+            },
+            {
+              "type": "int",
+              "name": "four",
+              "isRequired": "true"
+            },
+            {
               "type": "bool",
-              "name": "visibility"
+              "name": "five",
+              "isRequired": "false"
             }
           ]
         }
-      ]
+      ],
+      "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart",
+      "import": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart"
+    },
+    {
+      "name": "Two",
+      "methods": [],
+      "constructors": [
+        {
+          "isMainConstructor": "true",
+          "name": "null",
+          "parameters": [
+            {
+              "type": "dynamic",
+              "name": "one",
+              "isRequired": "true"
+            },
+            {
+              "type": "bool",
+              "name": "five",
+              "isRequired": "true"
+            }
+          ]
+        }
+      ],
+      "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart",
+      "import": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer\\lib\\testdir\\yass\\test.dart"
     }
   ],
   "constValues": [
