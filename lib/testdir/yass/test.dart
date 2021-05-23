@@ -1,8 +1,13 @@
-import 'test2.dart';
+import '../test2.dart';
 import '../CodeLinkAnnotations.dart';
 
 class theClass extends testImport {
   theClass(bool visibility) : super(visibility);
+}
+
+void func_for_codelink_test()
+{
+  print("CODELINK FONCTIONNE");
 }
 
 String bool_Int__String([bool val = true, int lol = 0]) {
@@ -47,17 +52,17 @@ void main() {}
 
 class One extends Two {
   const One(
-      {required String? one,
-      Osef? two,
-      String? three,
-      required int? four,
-      bool? five}) : super(one: one, five: five);
+      {String one = '',
+      dynamic two,
+      String three = '',
+      int four = 1,
+      bool five = true}) : super(one: one, five: five);
 }
 
 class Two {
   const Two({
-    required Osef? one,
-    required bool? five,
+     dynamic one,
+     bool five = true,
   });
 }
 
