@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'dart:typed_data';
-import 'Indexer/CodeLinkIndexer.dart';
+import 'Indexer/DartCodeIndexer.dart';
 import 'Indexer/MiscFunctions.dart';
 import 'dart:convert';
 
@@ -28,6 +28,7 @@ class Main {
     final message = String.fromCharCodes(data);
     var parsedData;
 
+    print('The server receive: $message');
     try {
       parsedData = json.decode(message);
       handleNewMessage(parsedData);

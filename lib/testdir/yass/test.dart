@@ -1,7 +1,11 @@
 import '../test2.dart';
 import '../CodeLinkAnnotations.dart';
+import '../../Creator/Visitors/FieldDeclarationVisitor.dart';
+import '../../Creator/Visitors/ImportDirectiveVisitor.dart';
 
 class theClass extends testImport {
+  String slt = '';
+
   theClass(bool visibility) : super(visibility);
 }
 
@@ -27,7 +31,6 @@ class RandomClass<T, R, M> {
   T variable;
 
   RandomClass(this.variable) {
-    print('salut');
   }
 
   RandomClass.testOtherConstructor(this.variable, int i) {
@@ -35,7 +38,6 @@ class RandomClass<T, R, M> {
   }
 
   T Int_Int__TemplateT(int a, int mdr) {
-    print('haha!');
     var i = 0;
     print(i);
     return (this.variable);
@@ -57,6 +59,10 @@ class One extends Two {
       String three = '',
       int four = 1,
       bool five = true}) : super(one: one, five: five);
+
+  void test1() {
+
+  }
 }
 
 class Two {
