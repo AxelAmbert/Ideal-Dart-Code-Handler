@@ -1,22 +1,25 @@
 import 'dart:io';
 
 import '../ConstrainedValue.dart';
-import 'FileWriter.dart';
+import 'ConstraintEditor.dart';
 
 class ImportWriter {
 
-  dynamic importToWrite;
-  String file;
+  String file = '';
 
-  ImportWriter(dynamic importList, List<ConstrainedValue> constrainedValues,
-      dynamic removeList, this.file) {
+  ImportWriter() {
     //final foundImport = constrainedValues.where((element) => element.type == 'import').toList();
 
-    removeEveryImportFromFile(removeList, constrainedValues);
-    addImportToFile(importList, constrainedValues);
+
 
   }
 
+  void exec(List<String> importList, List<ConstrainedValue> constrainedValues,
+      List<String> removeList, String file) {
+    this.file = file;
+    removeEveryImportFromFile(removeList, constrainedValues);
+    addImportToFile(importList, constrainedValues);
+  }
 
   void removeEveryImportFromFile(List<String> removeList,
       List<ConstrainedValue> constrainedValues) {
@@ -29,7 +32,7 @@ class ImportWriter {
         if (constrainedValue.type == 'import' &&
             fullName == constrainedValue.name) {
           constrainedValues.remove(constrainedValue);
-          file = FileWriter.removeFromFile(constrainedValue, constrainedValues, file);
+          file = ConstraintEditor.removeFromFile(constrainedValue, constrainedValues, file);
           break;
         }
       }
@@ -42,7 +45,7 @@ class ImportWriter {
 
       var tmp = ConstrainedValue(name, 0, name.length, 'import');
 
-      file = FileWriter.addToFile(tmp, constrainedValues, file);
+      file = ConstraintEditor.addToFile(tmp, constrainedValues, file);
       constrainedValues.add(tmp);
     }
   }

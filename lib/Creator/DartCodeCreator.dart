@@ -8,7 +8,7 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 
-import 'CodeWriter/FileWriter.dart';
+import 'CodeWriter/ConstraintEditor.dart';
 import 'CodeWriter/ImportWriter.dart';
 import 'ConstrainedValue.dart';
 import 'Visitors/ImportDirectiveVisitor.dart';
@@ -44,6 +44,8 @@ class DartCodeCreator {
     handleVisit(unit, path);
   }
 
+
+  //TODO add constructor to methods to delete ? [NO]
   async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
     for (AnalysisContext context in collection.contexts) {
       for (String path in context.contextRoot.analyzedFiles()) {
@@ -57,16 +59,18 @@ class DartCodeCreator {
         r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir\yass\test.dart');
     var fileString = file.readAsStringSync();
 
-    fileString = ImportWriter(
-        [
-          'package:analyzer/dart/ast/ast',
-          'package:analyzer/dart/ast/visitor',
-          'FieldDeclarationVisitor',
-          'ResolvedMethodVisitor',
-        ],
-        constrainedValues,
-        ['../../Creator/Visitors/FieldDeclarationVisitor', '../test2'],
-        fileString).file;
+     var iW = ImportWriter();
+
+     iW.exec([
+       'package:analyzer/dart/ast/ast',
+       'package:analyzer/dart/ast/visitor',
+       'FieldDeclarationVisitor',
+       'ResolvedMethodVisitor',
+     ],
+         constrainedValues,
+         ['../../Creator/Visitors/FieldDeclarationVisitor', '../test2'],
+         fileString);
+     fileString = iW.file;
 
     constrainedValues.forEach((element) {
       if (element.type != 'start-class')
@@ -78,7 +82,7 @@ class DartCodeCreator {
           'i++;' '}\n\r';
 
       print(code);
-      fileString = FileWriter.addToFile(ConstrainedValue(code, element.begin, element.begin + code.length, 'function'), constrainedValues, fileString);
+      fileString = ConstraintEditor.addToFile(ConstrainedValue(code, element.begin, element.begin + code.length, 'function'), constrainedValues, fileString);
       var write = File('test.dart');
       write.writeAsString(fileString);
     });

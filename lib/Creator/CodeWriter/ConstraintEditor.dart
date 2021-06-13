@@ -1,6 +1,6 @@
 import '../ConstrainedValue.dart';
 
-class FileWriter {
+class ConstraintEditor {
   static String removeFromFile(ConstrainedValue toRemove,
       List<ConstrainedValue> constrainedValues, String file) {
     file = file.substring(0, toRemove.begin) + file.substring(toRemove.end);
