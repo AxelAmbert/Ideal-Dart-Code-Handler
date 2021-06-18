@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import '../ConstrainedValue.dart';
-import 'CodeWritter.dart';
+import 'CodeWriter.dart';
 import 'ConstraintEditor.dart';
 
 class ImportWriter extends CodeWriter {
