@@ -1,24 +1,18 @@
 import 'dart:io';
 
 import '../ConstrainedValue.dart';
+import 'CodeWritter.dart';
 import 'ConstraintEditor.dart';
 
-class MethodWriter {
+class MethodWriter extends CodeWriter {
 
-  String file = '';
   List<String> createdMethods = [];
 
   MethodWriter();
 
-
-  void exec(List<String> methodList, List<ConstrainedValue> constrainedValues,
-      List<String> removeList, String file) {
-    removeEveryMethodFromFile(removeList, constrainedValues, file);
-    addMethodToFile(methodList, constrainedValues, file);
-  }
-
-  void removeEveryMethodFromFile(List<String> removeList,
-      List<ConstrainedValue> constrainedValues, String file) {
+  @override
+  void removeFromFile(List<String> removeList,
+      List<ConstrainedValue> constrainedValues) {
     final methodList = constrainedValues.where((e) => e.type == 'method');
 
     for (final toRemove in removeList) {
@@ -42,7 +36,8 @@ class MethodWriter {
     throw Exception('Start class not found');
   }
 
-  void addMethodToFile(dynamic methodList, List<ConstrainedValue> constrainedValues, String file) {
+  @override
+  void addToFile(dynamic methodList, List<ConstrainedValue> constrainedValues) {
 
     for (final methodToAdd in methodList) {
       final method = '\nvoid ${methodToAdd['name']}() {\n${methodToAdd['code']}\n}';

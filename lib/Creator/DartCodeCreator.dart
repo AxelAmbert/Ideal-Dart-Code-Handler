@@ -55,6 +55,8 @@ class DartCodeCreator {
         await analyzeSingleFile(context, path);
       }
     }
+    //print(constrainedValues);
+
     var file = File(
         r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir\yass\test.dart');
     var fileString = file.readAsStringSync();
@@ -81,13 +83,19 @@ class DartCodeCreator {
           'int i = 0;'
           'i++;' '}\n\r';
 
-      print(code);
-      fileString = ConstraintEditor.addToFile(ConstrainedValue(code, element.begin, element.begin + code.length, 'function'), constrainedValues, fileString);
-      var write = File('test.dart');
+      //print(code);
+      //fileString = ConstraintEditor.addToFile(ConstrainedValue(code, element.begin, element.begin + code.length, 'function'), constrainedValues, fileString);
+
+      for (ConstrainedValue v in constrainedValues) {
+        if (v.name == 'coucou') {
+          fileString = ConstraintEditor.addToFile(ConstrainedValue('MDR', v.begin, v.begin + 3, 'function'), constrainedValues, fileString);
+          break;
+        }
+      }
+      var write = File('testNew.dart');
       write.writeAsString(fileString);
     });
 
-    print(constrainedValues);
   }
 
   void creator(List<dynamic> arguments, Function onEnd) async {

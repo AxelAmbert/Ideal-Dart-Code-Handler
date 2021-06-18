@@ -28,7 +28,7 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
   void visitMethodDeclaration(MethodDeclaration node) {
     constrainedValues.add(ConstrainedValue(
         node.name.toString(),
-        node.beginToken.charEnd.toInt(),
+        node.beginToken.charEnd.toInt() - node.returnType.type.toString().length,
         node.endToken.charEnd.toInt(),
         'method'));
   }

@@ -1,6 +1,10 @@
-import '../test2.dart';
+import 'ResolvedMethodVisitor.dart';
+import 'FieldDeclarationVisitor.dart';
+import 'package:analyzer/dart/ast/visitor.dart';
+import 'package:analyzer/dart/ast/ast.dart';
+
 import '../CodeLinkAnnotations.dart';
-import '../../Creator/Visitors/FieldDeclarationVisitor.dart';
+
 import '../../Creator/Visitors/ImportDirectiveVisitor.dart';
 
 class theClass extends testImport {
@@ -28,7 +32,7 @@ int String_Int__Int(String source, int toAdd) {
 }
 
 class RandomClass<T, R, M> {
-  int coucou;
+  MDRint coucou;
   T variable;
 
   RandomClass(this.variable) {
