@@ -31,10 +31,10 @@ class RandomClass<T, R, M> {
   int coucou;
   T variable;
 
-  RandomClass(this.variable) {
+  RandomClass(this.variable, this.coucou) {
   }
 
-  RandomClass.testOtherConstructor(this.variable, int i) {
+  RandomClass.testOtherConstructor(this.variable, int i, this.coucou) {
     print('?');
   }
 
@@ -53,14 +53,10 @@ int Callback_Int_Callback__Int(Function func, int ok, Function secondFunc) {
 
 void main() {}
 
-class HahaAOZAOZAPOEAPOEAPOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOE {
 
-}
 
 class One extends Two {
-  HahaAOZAOZAPOEAPOEAPOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOE   /*mdr*/                  Callback_Int_Callback__Int(Function func, int ok, Function secondFunc) {
-    return (HahaAOZAOZAPOEAPOEAPOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOEPAOE());
-  }
+
   const One(
       {String one = '',
       dynamic two,

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:async' as async;
+import 'package:path/path.dart' as path;
 
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/analysis/analysis_context_collection.dart';
@@ -9,17 +10,25 @@ import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 
 import 'CodeWriter/ConstraintEditor.dart';
+import 'CodeWriter/DeclarationWriter.dart';
 import 'CodeWriter/ImportWriter.dart';
+import 'CodeWriter/MethodWriter.dart';
 import 'ConstrainedValue.dart';
+import 'JsonData/CreatorData.dart';
+import 'JsonData/DataToDelete.dart';
+import 'JsonData/FieldDeclarationData.dart';
+import 'JsonData/MethodDeclarationData.dart';
+import 'JsonData/ProgramParameters.dart';
 import 'Visitors/ImportDirectiveVisitor.dart';
 import 'Visitors/ResolvedClassVisitor.dart';
 
 class DartCodeCreator {
   List<ConstrainedValue> constrainedValues = <ConstrainedValue>[];
-  final classToLookFor = '';
+  ProgramParameters parameters;
+  String file = '';
 
-  DartCodeCreator(List<dynamic> arguments, Function onEnd) {
-    creator(arguments, onEnd);
+  DartCodeCreator(this.parameters, Function onEnd) {
+    creator(onEnd);
   }
 
   void addImports(dynamic imports) {}
@@ -55,53 +64,91 @@ class DartCodeCreator {
         await analyzeSingleFile(context, path);
       }
     }
-    //print(constrainedValues);
+  }
 
-    var file = File(
-        r'C:\Users\ImPar\OneDrive\Documents\codelink-dart-indexer\lib\testdir\yass\test.dart');
-    var fileString = file.readAsStringSync();
+  String reconstructViewPath(ProgramParameters parameters) {
+    return parameters.path +
+        Platform.pathSeparator +
+        'lib' +
+        Platform.pathSeparator +
+        parameters.view +
+        '.dart';
+  }
 
-     var iW = ImportWriter();
+  void getFileString() {
+    file = File(reconstructViewPath(parameters)).readAsStringSync();
+  }
 
-     iW.exec([
-       'package:analyzer/dart/ast/ast',
-       'package:analyzer/dart/ast/visitor',
-       'FieldDeclarationVisitor',
-       'ResolvedMethodVisitor',
-     ],
-         constrainedValues,
-         ['../../Creator/Visitors/FieldDeclarationVisitor', '../test2'],
-         fileString);
-     fileString = iW.file;
+  DataToDelete getDataToDelete() {
+    final fullPath = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '.json');
+    var jsonFile;
+    var jsonData;
 
-    constrainedValues.forEach((element) {
-      if (element.type != 'start-class')
-        return;
+    File(fullPath).createSync(recursive: true);
+    jsonFile = File(fullPath).readAsStringSync();
 
-      print('CA PASSE ICI');
-      final code = '\n\rvoid func() {'
-          'int i = 0;'
-          'i++;' '}\n\r';
+    try {
+      jsonData = jsonDecode(jsonFile);
+      return DataToDelete(jsonData);
+    } catch (e) {
+      return DataToDelete.empty();
+    }
+  }
 
-      //print(code);
-      //fileString = ConstraintEditor.addToFile(ConstrainedValue(code, element.begin, element.begin + code.length, 'function'), constrainedValues, fileString);
+  List<String> executeImportWriter(List<String> importList, DataToDelete dataToDelete) {
+    final importWriter = ImportWriter(file);
 
-      for (ConstrainedValue v in constrainedValues) {
-        if (v.name == 'coucou') {
-          fileString = ConstraintEditor.addToFile(ConstrainedValue('MDR', v.begin, v.begin + 3, 'function'), constrainedValues, fileString);
-          break;
-        }
-      }
-      var write = File('testNew.dart');
-      write.writeAsString(fileString);
-    });
+
+    importWriter.removeFromFile(dataToDelete.imports, constrainedValues);
+    importWriter.addToFile(importList, constrainedValues);
+    //TODO remove the old imports after loading it.
+    file = importWriter.file;
+    return importWriter.addedData;
+  }
+
+  List<String> executeDeclarationWriter(List<FieldDeclarationData> fieldList, DataToDelete dataToDelete) {
+    final declarationWriter = DeclarationWriter(file);
+
+    declarationWriter.removeFromFile(dataToDelete.declarations, constrainedValues);
+    declarationWriter.addToFile(fieldList, constrainedValues);
+    file = declarationWriter.file;
+    return declarationWriter.addedData;
+  }
+
+  List<String> executeMethodWriter(List<MethodDeclarationData> methodList, DataToDelete dataToDelete) {
+    final methodWriter = MethodWriter(file);
+
+    methodWriter.removeFromFile(dataToDelete.methods, constrainedValues);
+    methodWriter.addToFile(methodList, constrainedValues);
+    file = methodWriter.file;
+    return methodWriter.addedData;
+  }
+
+   String executeEveryWriter(CreatorData data, String file, DataToDelete dataToDelete) {
+    final imports = executeImportWriter(data.imports, dataToDelete);
+    final methods = executeMethodWriter(data.methodDeclarations, dataToDelete);
+    final declarations = executeDeclarationWriter(data.fieldDeclarations, dataToDelete);
+
+
+    return (json.encode({'imports':imports, 'methods':methods, 'declarations':declarations}));
 
   }
 
-  void creator(List<dynamic> arguments, Function onEnd) async {
-    var collection = AnalysisContextCollection(includedPaths: [arguments[0]]);
+  void writeCode(DataToDelete dataToDelete) {
+    final data = CreatorData(parameters.code);
+    final newDataToDelete = executeEveryWriter(data, file, dataToDelete);
+
+    File('new.dart').writeAsStringSync(file);
+  }
+
+  void creator(Function onEnd) async {
+    final dataToDelete = getDataToDelete();
+    final collection =
+        AnalysisContextCollection(includedPaths: [reconstructViewPath(parameters)]);
 
     await analyzeAllFiles(collection);
+    getFileString();
+    writeCode(dataToDelete);
 
     //print('');
     // print(constrainedValues);
@@ -111,5 +158,9 @@ class DartCodeCreator {
 }
 
 void main(List<String> arguments) async {
-  await DartCodeCreator(arguments, () {});
+  final file = File('args.json').readAsStringSync();
+  dynamic json = jsonDecode(file);
+
+
+  await DartCodeCreator(ProgramParameters(json), () {});
 }

@@ -10,7 +10,7 @@ class TypeNameVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitTypeName(TypeName node) {
-    type['name'] = node.toString();
+    type['len'] = node.toString().length;
   }
 
   @override

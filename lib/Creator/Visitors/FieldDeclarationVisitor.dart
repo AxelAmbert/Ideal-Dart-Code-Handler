@@ -15,7 +15,7 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
   @override
   void visitFieldDeclaration(FieldDeclaration node) {
     var name = '';
-    final typename = {'name': ''};
+    final typename = {'len': 0};
 
     node.visitChildren(TypeNameVisitor(typename));
     node.fields.variables.forEach((element) {
@@ -24,8 +24,8 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
 
     attributes.add(ConstrainedValue(
         name,
-        node.beginToken.charEnd.toInt() - typename['name'].length,
+        node.beginToken.charEnd.toInt() -  int.parse(typename['len'].toString()),
         node.endToken.charEnd.toInt(),
-        'field'));
+        'declaration'));
   }
 }

@@ -39,7 +39,7 @@ class Index {
 
   Index(this.userPath, List<dynamic> arguments, Function onEnd) {
     randomName = generateRandomName();
-    createOutputFolder();
+    //createOutputFolder();
     index(arguments, onEnd);
   }
 
@@ -174,9 +174,9 @@ class Index {
   }
 }
 
-/*void main(List<String> arguments) {
-  Index(arguments, () {});
-}*/
+void main(List<String> arguments) {
+  Index(arguments, arguments, () {});
+}
 
 /*
 void main(List<String> arguments, Function onEnd) async {

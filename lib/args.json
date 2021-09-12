@@ -1,0 +1,48 @@
+{
+  "view": "test",
+  "path": "C:\\Users\\ImPar\\OneDrive\\Documents\\codelink-dart-indexer",
+  "code": {
+    "imports": [
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor",
+      "Visitors/ResolvedFunctionVisitor"
+    ],
+    "functions": [
+      {
+        "name": "func1",
+        "code": "void main(int one) {print('1');}"
+      },
+      {
+        "name": "func2",
+        "code": "void main(int one) {print('2');}"
+      },
+      {
+        "name": "func3",
+        "code": "void main(int one) {print('3');}"
+      }
+    ],
+    "declarations": [
+      {
+        "name": "thebutton",
+        "code": "Button thebutton;",
+        "children": [
+          {
+            "name": "thebuttonOnPressed",
+            "code": "thebuttonOnPressed = null;"
+          }
+        ]
+      },
+      {
+        "name": "box",
+        "code": "Sizedbox box = null"
+      }
+    ],
+    "initialization": "thebutton = new Button();\nbox = new Sizedbox(150, 120);"
+  }
+}

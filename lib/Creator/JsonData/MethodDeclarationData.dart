@@ -1,8 +1,8 @@
-class DeclarationData {
+class MethodDeclarationData {
   String name = '';
   String code = '';
 
-  DeclarationData(dynamic data) {
+  MethodDeclarationData(dynamic data) {
     name = data['name'];
     code = data['code'];
   }

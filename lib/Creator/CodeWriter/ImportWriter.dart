@@ -8,14 +8,12 @@ class ImportWriter extends CodeWriter {
 
   String file = '';
 
-  ImportWriter() {
+  ImportWriter(String file) : super(file) {
     //final foundImport = constrainedValues.where((element) => element.type == 'import').toList();
 
 
 
   }
-
-
 
   void removeFromFile(List<String> removeList,
       List<ConstrainedValue> constrainedValues) {
@@ -35,8 +33,7 @@ class ImportWriter extends CodeWriter {
     }
   }
 
-  @override
-  void addToFile(dynamic importList, List<ConstrainedValue> constrainedValues) {
+  void addToFile(List<String> importList, List<ConstrainedValue> constrainedValues) {
     for (final importToAdd in importList) {
       var name = "import '" + importToAdd + ".dart';\n";
 
@@ -44,6 +41,7 @@ class ImportWriter extends CodeWriter {
 
       file = ConstraintEditor.addToFile(tmp, constrainedValues, file);
       constrainedValues.add(tmp);
+      addedData.add(name);
     }
   }
 
