@@ -17,9 +17,15 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
     var name = '';
     final typename = {'len': 0};
 
+
     node.visitChildren(TypeNameVisitor(typename));
     node.fields.variables.forEach((element) {
-      name = element.declaredElement.name.toString();
+      final declaredElement = element.declaredElement;
+
+      if (declaredElement == null) {
+        return;
+      }
+      name = declaredElement.name.toString();
     });
 
     attributes.add(ConstrainedValue(

@@ -33,7 +33,7 @@ class Main {
     final message = String.fromCharCodes(data);
     var parsedData;
 
-    print('The server receive: $message');
+    //print('The server receive: $message');
     try {
       client.write(jsonEncode({'info': 'message received'}));
       parsedData = json.decode(message);

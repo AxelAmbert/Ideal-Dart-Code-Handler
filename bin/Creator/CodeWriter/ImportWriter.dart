@@ -6,8 +6,6 @@ import 'ConstraintEditor.dart';
 
 class ImportWriter extends CodeWriter {
 
-  String file = '';
-
   ImportWriter(String file) : super(file) {
     //final foundImport = constrainedValues.where((element) => element.type == 'import').toList();
 
@@ -35,7 +33,7 @@ class ImportWriter extends CodeWriter {
 
   void addToFile(List<String> importList, List<ConstrainedValue> constrainedValues) {
     for (final importToAdd in importList) {
-      var name = "import '" + importToAdd + ".dart';\n";
+      var name = "import '" + importToAdd;
 
       var tmp = ConstrainedValue(name, 0, name.length, 'import');
 

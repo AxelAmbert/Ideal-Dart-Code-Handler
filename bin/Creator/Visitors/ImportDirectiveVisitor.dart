@@ -11,7 +11,7 @@ class ImportDirectiveVisitor extends SimpleAstVisitor<void> {
   @override
   void visitImportDirective(ImportDirective node) {
     constrainedValues.add(ConstrainedValue(
-        node.selectedUriContent,
+        node.selectedUriContent.toString(),
         node.keyword.charOffset.toInt(),
         node.endToken.charEnd.toInt(),
         'import'));

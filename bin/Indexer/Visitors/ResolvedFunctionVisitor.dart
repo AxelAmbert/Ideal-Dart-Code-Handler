@@ -4,14 +4,19 @@ import '../MiscFunctions.dart';
 import 'GetAnnotationTypes.dart';
 
 class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
-
   final String path;
   final dynamic funcs;
 
   ResolvedFunctionVisitor(this.path, this.funcs);
 
   dynamic getIdentifierInfos(FunctionDeclaration node) {
-    final values = node.functionExpression.parameters.parameters.map((e) {
+    final parameters = node.functionExpression.parameters;
+
+    if (parameters == null) {
+      return;
+    }
+
+    final values = parameters.parameters.map((e) {
       final v = {};
 
       v['id'] = e.identifier;
@@ -25,8 +30,18 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
 
   List<dynamic> getParameters(FunctionDeclaration node) {
     final params = [];
-    final parameterTypes = node.functionExpression.parameters.parameterElements
-        .map((e) => e.type.getDisplayString(withNullability: false));
+    final parameters = node.functionExpression.parameters;
+
+    if (parameters == null) {
+      return params;
+    }
+    final parameterTypes = parameters.parameterElements
+        .map((e) {
+          if (e == null) {
+            return '';
+          }
+          return e.type.getDisplayString(withNullability: false);
+        });
     final identifierInfos = getIdentifierInfos(node);
 
     for (var i = 0; i < parameterTypes.length; i++) {

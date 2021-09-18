@@ -42,7 +42,7 @@ class DartCodeCreator {
   Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
     ResolvedUnitResult placeholder;
 
-    placeholder = await session.getResolvedUnit(path);
+    placeholder = (await session.getResolvedUnit(path)) as ResolvedUnitResult;
     return (placeholder.unit);
   }
 

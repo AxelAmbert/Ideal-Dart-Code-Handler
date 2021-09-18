@@ -26,9 +26,16 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitMethodDeclaration(MethodDeclaration node) {
+    final returnType = node.returnType;
+
+    if (returnType == null) {
+      return;
+    }
+
+
     constrainedValues.add(ConstrainedValue(
         node.name.toString(),
-        node.beginToken.charEnd.toInt() - node.returnType.type.toString().length,
+        node.beginToken.charEnd.toInt() - returnType.type.toString().length,
         node.endToken.charEnd.toInt(),
         'method'));
   }

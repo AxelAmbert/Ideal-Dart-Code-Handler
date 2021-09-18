@@ -12,8 +12,13 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+    final declaredElement = node.declaredElement;
 
-    if (node.declaredElement.name.toString() == "RandomClass") {
+    if (declaredElement == null) {
+      return;
+    }
+    print('Je visite ${declaredElement.name.toString()}');
+    if (declaredElement.name.toString() == 'Main') {
 
       values.add(ConstrainedValue(
           node.name.toString(),

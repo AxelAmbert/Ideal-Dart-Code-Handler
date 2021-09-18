@@ -17,6 +17,7 @@ class CreatorData {
   CreatorData(dynamic data) {
     addInitToMethod(data);
     imports = data['imports'].cast<String>();
+
     data['functions'].forEach((methodData) {
       methodDeclarations.add(MethodDeclarationData(methodData));
     });

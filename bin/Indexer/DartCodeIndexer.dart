@@ -81,7 +81,7 @@ class DartCodeIndexer {
       programArgs['deepFlutterAnalysis'] == false) {
     return (session.getParsedUnit(path).unit);
   } else {*/
-    placeholder = await session.getResolvedUnit(path);
+    placeholder = (await session.getResolvedUnit(path)) as ResolvedUnitResult;
     return (placeholder.unit);
     //}
   }

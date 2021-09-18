@@ -15,11 +15,10 @@ class IndexerParameters {
   //FOUND BY THE PROGRAM: The pathToIndex, with a path separator at the end of it
   String uselessPath = '';
 
-  bool isFlutter = false;
   String flutterRoot = '';
 
   void getFlutterPath() {
-    final env = Platform.environment['PATH']?.split(';') ?? [];
+    final env = Platform.environment['PATH'].split(';') ?? [];
     final realPath = Platform.pathSeparator +
         'packages' +
         Platform.pathSeparator +
