@@ -1,5 +1,5 @@
-import 'testdir/yass/test.dart.dart';
-import 'package:flutter/material.dart.dart';
+import 'testdir/yass/test.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 
 /* IDEAL_IMPORT_START */

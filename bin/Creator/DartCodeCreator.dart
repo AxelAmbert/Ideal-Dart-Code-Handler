@@ -90,7 +90,10 @@ class DartCodeCreator {
     try {
       jsonData = jsonDecode(jsonFile);
       return DataToDelete(jsonData);
-    } catch (e) {
+    } catch (e, s) {
+      print('Error while fetching data to delete');
+      print(e);
+      print(s);
       return DataToDelete.empty();
     }
   }
@@ -135,10 +138,11 @@ class DartCodeCreator {
   }
 
   void writeCode(DataToDelete dataToDelete) {
+    final pathToWrite = path.join(parameters.path, 'lib', parameters.view + '.dart');
     final data = CreatorData(parameters.code);
     final newDataToDelete = executeEveryWriter(data, file, dataToDelete);
 
-    File('new.dart').writeAsStringSync(file);
+    File(pathToWrite).writeAsStringSync(file);
   }
 
   void creator(Function onEnd) async {
