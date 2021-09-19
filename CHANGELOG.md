@@ -10,3 +10,6 @@
 
 ## 1.0.3
 - Resolve another MacOS dependant version problem
+
+## 1.0.4
+- The Code Handler is now a standalone executable instead of a server

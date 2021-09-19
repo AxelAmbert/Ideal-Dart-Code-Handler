@@ -17,21 +17,13 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
     if (declaredElement == null) {
       return;
     }
-    print('Je visite ${declaredElement.name.toString()}');
-    if (declaredElement.name.toString() == 'Main') {
-
+    if (declaredElement.name.toString() == classToLookFor) {
       values.add(ConstrainedValue(
           node.name.toString(),
           node.leftBracket.charEnd.toInt(),
           node.leftBracket.charEnd.toInt(),
           'start-class'));
     }
-    /*
-    TODO add back this part of the code when testing finishes
-    if (node.name.toString() != classToLookFor) {<<<
-      return;
-    }
-    */
     node.visitChildren(ResolvedMethodVisitor(values));
     node.visitChildren(FieldDeclarationVisitor(values));
   }

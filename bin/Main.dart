@@ -9,10 +9,14 @@ import 'Creator/JsonData/CreatorParameters.dart';
 import 'dart:convert';
 
 class Main {
-  var server;
-  final port = 41081;
+  List<String> args;
 
-  Main() {
+  Main(this.args) {
+
+    if (args.length != 2) {
+      print('Wrong number of argument, found ${args.length} instead of 2');
+      return;
+    }
     main();
   }
 
@@ -20,7 +24,7 @@ class Main {
 
   }
 
-  void handleNewMessage(dynamic parsedData) {
+  void handleNewMessage(String type, dynamic parsedData) {
     if (parsedData['requestType'] == 'index') {
       DartCodeIndexer(IndexerParameters(parsedData['parameters']), () {});
     } else if (parsedData['requestType'] == 'creator') {
@@ -29,49 +33,15 @@ class Main {
   }
 
 
-  void onNewMessage(Uint8List data, Socket client) async {
-    final message = String.fromCharCodes(data);
-    var parsedData;
-
-    //print('The server receive: $message');
-    try {
-      client.write(jsonEncode({'info': 'message received'}));
-      parsedData = json.decode(message);
-      handleNewMessage(parsedData);
-    } catch (e, stack) {
-      print('Invalid message');
-      print(e.toString());
-      print(stack.toString());
-    }
-  }
-
-  void handleConnection(Socket client) {
-    print('Connection: ${client.remoteAddress.address}:${client.remotePort}');
-    client.listen(
-      (Uint8List data) {
-        onNewMessage(data, client);
-      },
-      onError: (error) {
-        print(error);
-        client.close();
-      },
-      onDone: () {
-        print('Client left');
-        client.close();
-      },
-    );
-  }
-
   void main() async {
-    server = await ServerSocket.bind(InternetAddress.anyIPv4, port);
-    print('Server started on port ${port}');
-    server.listen((client) {
-      handleConnection(client);
-    });
+    final type = args[0];
+    final parsedData = json.decode(args[1]);
+
+    handleNewMessage(type, parsedData);
   }
 }
 
 
-void main() async {
-  Main();
+void main(List<String> args) async {
+  Main(args);
 }

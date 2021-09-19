@@ -129,8 +129,8 @@ class DartCodeCreator {
 
    String executeEveryWriter(CreatorData data, String file, DataToDelete dataToDelete) {
     final imports = executeImportWriter(data.imports, dataToDelete);
-    final methods = executeMethodWriter(data.methodDeclarations, dataToDelete);
     final declarations = executeDeclarationWriter(data.fieldDeclarations, dataToDelete);
+    final methods = executeMethodWriter(data.methodDeclarations, dataToDelete);
 
 
     return (json.encode({'imports':imports, 'methods':methods, 'declarations':declarations}));
