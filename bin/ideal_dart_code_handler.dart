@@ -13,8 +13,9 @@ class Main {
 
   Main(this.args) {
 
-    if (args.length != 2) {
-      print('Wrong number of argument, found ${args.length} instead of 2');
+    if (args.length < 1) {
+      print('Wrong number of argument, should at least be 1');
+      print(args);
       return;
     }
     main();
@@ -24,7 +25,7 @@ class Main {
 
   }
 
-  void handleNewMessage(String type, dynamic parsedData) {
+  void handleNewMessage(dynamic parsedData) {
     if (parsedData['requestType'] == 'index') {
       DartCodeIndexer(IndexerParameters(parsedData['parameters']), () {});
     } else if (parsedData['requestType'] == 'creator') {
@@ -34,10 +35,9 @@ class Main {
 
 
   void main() async {
-    final type = args[0];
-    final parsedData = json.decode(args[1]);
+    final decoded = utf8.decode(base64Url.decode(args[0]));
 
-    handleNewMessage(type, parsedData);
+    handleNewMessage(json.decode(decoded));
   }
 }
 
