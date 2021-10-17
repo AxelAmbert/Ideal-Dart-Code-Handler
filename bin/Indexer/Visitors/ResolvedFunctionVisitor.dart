@@ -1,13 +1,16 @@
 import 'package:analyzer/dart/ast/ast.dart';
 import 'package:analyzer/dart/ast/visitor.dart';
+import '../JsonData/IndexerParameters.dart';
 import '../MiscFunctions.dart';
 import 'GetAnnotationTypes.dart';
 
 class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
   final String path;
   final dynamic funcs;
+  final IndexerParameters programData;
 
-  ResolvedFunctionVisitor(this.path, this.funcs);
+
+  ResolvedFunctionVisitor(this.path, this.funcs, this.programData);
 
   dynamic getIdentifierInfos(FunctionDeclaration node) {
     final parameters = node.functionExpression.parameters;
@@ -66,7 +69,7 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
         'return': node.returnType.toString(),
         'annotations': getAnnotations(node.metadata),
         'path': path,
-        //'import': removePrefixFromPath(path)
+        'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath)
 
         //'code': node.functionExpression.body.toString()
       });

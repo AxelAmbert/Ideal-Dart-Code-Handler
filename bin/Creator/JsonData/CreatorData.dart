@@ -21,6 +21,7 @@ class CreatorData {
     data['functions'].forEach((methodData) {
       methodDeclarations.add(MethodDeclarationData(methodData));
     });
+
     data['declarations'].forEach((declaration) {
       fieldDeclarations.add(FieldDeclarationData(declaration));
     });

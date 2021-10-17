@@ -33,6 +33,7 @@ class ImportWriter extends CodeWriter {
 
   void addToFile(List<String> importList, List<ConstrainedValue> constrainedValues) {
     for (final importToAdd in importList) {
+      print('Trying to add $importToAdd');
       var name = "import '" + importToAdd;
 
       var tmp = ConstrainedValue(name, 0, name.length, 'import');

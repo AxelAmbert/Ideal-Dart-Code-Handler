@@ -13,6 +13,7 @@ import 'CodeWriter/ConstraintEditor.dart';
 import 'CodeWriter/DeclarationWriter.dart';
 import 'CodeWriter/ImportWriter.dart';
 import 'CodeWriter/MethodWriter.dart';
+import 'CodeWriter/RouteWriter.dart';
 import 'ConstrainedValue.dart';
 import 'JsonData/CreatorData.dart';
 import 'JsonData/DataToDelete.dart';
@@ -133,8 +134,8 @@ class DartCodeCreator {
     final methods = executeMethodWriter(data.methodDeclarations, dataToDelete);
 
 
+    RouteWriter.write(parameters);
     return (json.encode({'imports':imports, 'methods':methods, 'declarations':declarations}));
-
   }
 
   void writeCode(DataToDelete dataToDelete) {
@@ -146,6 +147,7 @@ class DartCodeCreator {
   }
 
   void creator(Function onEnd) async {
+    print('INDEXER DEBUG MODE ACTIVATED');
     final dataToDelete = getDataToDelete();
     final collection =
         AnalysisContextCollection(includedPaths: [reconstructViewPath(parameters)]);

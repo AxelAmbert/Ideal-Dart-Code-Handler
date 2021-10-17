@@ -69,7 +69,7 @@ class DartCodeIndexer {
     unit.visitChildren(UnresolvedClassVisitor());
   } else {*/
     unit.visitChildren(ResolvedClassVisitor(path, classes, programArgs));
-    unit.visitChildren(ResolvedFunctionVisitor(path, funcs));
+    unit.visitChildren(ResolvedFunctionVisitor(path, funcs, programArgs));
     unit.visitChildren(TopLevelVariableVisitor(variables));
     //}
   }
@@ -111,6 +111,7 @@ class DartCodeIndexer {
   void writeEverything() {
     final fullPath = programArgs.finalPath + (programArgs.finalPath.endsWith(Platform.pathSeparator) ? '' : Platform.pathSeparator);
 
+    File(fullPath + 'classes.json').createSync(recursive: true);
     File(fullPath + 'classes.json').writeAsString(jsonEncode(theClasses));
 
     File(fullPath + 'inheritance.json').writeAsString(jsonEncode(inheritanceTree));
