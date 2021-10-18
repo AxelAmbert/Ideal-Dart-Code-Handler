@@ -21,9 +21,6 @@ class Main {
     main();
   }
 
-  void sendResponse() {
-
-  }
 
   void handleNewMessage(dynamic parsedData) {
     if (parsedData['requestType'] == 'index') {
@@ -42,6 +39,6 @@ class Main {
 }
 
 
-void main(List<String> args) async {
+void main(List<String> args) {
   Main(args);
 }

@@ -9,7 +9,6 @@ import 'package:analyzer/dart/analysis/analysis_context.dart';
 import 'package:analyzer/dart/analysis/session.dart';
 import 'package:analyzer/dart/analysis/results.dart';
 
-import 'CodeWriter/ConstraintEditor.dart';
 import 'CodeWriter/DeclarationWriter.dart';
 import 'CodeWriter/ImportWriter.dart';
 import 'CodeWriter/MethodWriter.dart';
@@ -22,6 +21,7 @@ import 'JsonData/MethodDeclarationData.dart';
 import 'JsonData/CreatorParameters.dart';
 import 'Visitors/ImportDirectiveVisitor.dart';
 import 'Visitors/ResolvedClassVisitor.dart';
+import 'ViewCreator.dart';
 
 class DartCodeCreator {
   List<ConstrainedValue> constrainedValues = <ConstrainedValue>[];
@@ -146,20 +146,46 @@ class DartCodeCreator {
     File(pathToWrite).writeAsStringSync(file);
   }
 
+
+  void createMainAndView() {
+    final viewPath = path.join(parameters.path, 'lib', parameters.view + '.dart');
+    final mainPath = path.join(parameters.path, 'lib', 'IdealMain.dart');
+    final viewFile = File(viewPath);
+    final mainFile = File(mainPath);
+
+    if (viewFile.existsSync() == false) {
+      viewFile.writeAsString(ViewCreator.createView(parameters.view));
+    }
+    if (mainFile.existsSync() == false) {
+      mainFile.writeAsString(ViewCreator.createMain());
+    }
+  }
+
+  // Delete, if it exists, the old main created by Flutter
+  void deleteOldMain() {
+    final file = File(path.join(parameters.path, 'lib', 'main.dart'));
+
+    if (file.existsSync()) {
+      file.deleteSync();
+    }
+  }
+
+  void createMissingFiles() {
+    createMainAndView();
+    RouteWriter.write(parameters);
+    deleteOldMain();
+  }
+
   void creator(Function onEnd) async {
     print('INDEXER DEBUG MODE ACTIVATED');
     final dataToDelete = getDataToDelete();
     final collection =
         AnalysisContextCollection(includedPaths: [reconstructViewPath(parameters)]);
 
+    createMissingFiles();
     await analyzeAllFiles(collection);
     getFileString();
     writeCode(dataToDelete);
-
-    //print('');
-    // print(constrainedValues);
-    //recomputeConstraint(methods, {'begin': 500, 'end': 555}, (a, b) => a + b);
-    //print(attributes);
   }
 }
 /*
