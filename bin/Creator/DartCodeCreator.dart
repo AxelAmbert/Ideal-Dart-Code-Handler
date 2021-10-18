@@ -55,7 +55,6 @@ class DartCodeCreator {
   }
 
 
-  //TODO add constructor to methods to delete ? [NO]
   async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
     for (AnalysisContext context in collection.contexts) {
       for (String path in context.contextRoot.analyzedFiles()) {
@@ -105,7 +104,6 @@ class DartCodeCreator {
 
     importWriter.removeFromFile(dataToDelete.imports, constrainedValues);
     importWriter.addToFile(importList, constrainedValues);
-    //TODO remove the old imports after loading it.
     file = importWriter.file;
     return importWriter.addedData;
   }

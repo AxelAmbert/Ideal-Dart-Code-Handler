@@ -28,6 +28,7 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
       name = declaredElement.name.toString();
     });
 
+    print('La len ? ${typename['len']}');
     if (typename['len'] == 0) {
       typename['len'] = 3;
     }

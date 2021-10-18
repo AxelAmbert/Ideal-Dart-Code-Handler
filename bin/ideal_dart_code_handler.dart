@@ -34,6 +34,7 @@ class Main {
   void main() async {
     final decoded = utf8.decode(base64Url.decode(args[0]));
 
+    print('Le code handler reçoit ${decoded}');
     handleNewMessage(json.decode(decoded));
   }
 }

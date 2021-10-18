@@ -4,16 +4,16 @@ class ViewCreator {
     return """
 import 'package:flutter/material.dart';
 
-class ${viewName}Page extends StatefulWidget {
-  ${viewName}Page({Key key}) : super(key: key);
+class $viewName extends StatefulWidget {
+  $viewName({Key key}) : super(key: key);
 
   @override
-  _${viewName}PageState createState() => _${viewName}PageState();
+  _$viewName createState() => _${viewName}State();
 }
 
-class _${viewName}PageState extends State<${viewName}Page> {
+class _${viewName}State extends State<$viewName> {
 
-  _${viewName}PageState() {}
+  _${viewName}State() {}
   
   @override
     Widget build(BuildContext context) {

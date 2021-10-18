@@ -10,8 +10,8 @@ class RouteWriter {
     var routingBuffer = 'final materialRoutes = {\n';
 
     data.routes.forEach((route) {
-      importBuffer += "import '${route.name}.dart;'\n";
-      routingBuffer += "'${route.path}': (context) => const ${route.name},\n";
+      importBuffer += "import '${route.view}.dart';\n";
+      routingBuffer += "'${route.view}': (context) => const ${route.view},\n";
     });
     routingBuffer += '};\n';
     return importBuffer + routingBuffer;

@@ -1,9 +1,9 @@
 class RouteData {
   String path = '';
-  String name = '';
+  String view = '';
 
   RouteData(route) {
     path = route['path'];
-    name = route['name'];
+    view = route['view'];
   }
 }
