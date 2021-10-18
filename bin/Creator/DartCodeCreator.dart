@@ -37,7 +37,7 @@ class DartCodeCreator {
   void handleVisit(CompilationUnit unit, String path) {
     //TODO add classToLookFor to select only the right class.
     unit.visitChildren(ImportDirectiveVisitor(constrainedValues));
-    unit.visitChildren(ResolvedClassVisitor(constrainedValues, ''));
+    unit.visitChildren(ResolvedClassVisitor(constrainedValues, parameters.view));
   }
 
   Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
@@ -81,7 +81,7 @@ class DartCodeCreator {
   }
 
   DataToDelete getDataToDelete() {
-    final fullPath = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '.json');
+    final fullPath = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '_mem_del.json');
     var jsonFile;
     var jsonData;
 
@@ -139,11 +139,13 @@ class DartCodeCreator {
   }
 
   void writeCode(DataToDelete dataToDelete) {
-    final pathToWrite = path.join(parameters.path, 'lib', parameters.view + '.dart');
+    final pathToCode = path.join(parameters.path, 'lib', parameters.view + '.dart');
+    final pathToCreatedData = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '_mem_del.json');
     final data = CreatorData(parameters.code);
     final newDataToDelete = executeEveryWriter(data, file, dataToDelete);
 
-    File(pathToWrite).writeAsStringSync(file);
+    File(pathToCreatedData).writeAsStringSync(newDataToDelete);
+    File(pathToCode).writeAsStringSync(file);
   }
 
 
@@ -154,26 +156,18 @@ class DartCodeCreator {
     final mainFile = File(mainPath);
 
     if (viewFile.existsSync() == false) {
-      viewFile.writeAsString(ViewCreator.createView(parameters.view));
+      viewFile.writeAsStringSync(ViewCreator.createView(parameters.view));
     }
     if (mainFile.existsSync() == false) {
-      mainFile.writeAsString(ViewCreator.createMain());
+      mainFile.writeAsStringSync(ViewCreator.createMain());
     }
   }
 
-  // Delete, if it exists, the old main created by Flutter
-  void deleteOldMain() {
-    final file = File(path.join(parameters.path, 'lib', 'main.dart'));
 
-    if (file.existsSync()) {
-      file.deleteSync();
-    }
-  }
 
   void createMissingFiles() {
     createMainAndView();
     RouteWriter.write(parameters);
-    deleteOldMain();
   }
 
   void creator(Function onEnd) async {

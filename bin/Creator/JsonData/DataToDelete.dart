@@ -6,9 +6,9 @@ class DataToDelete {
   DataToDelete.empty();
 
   DataToDelete(dynamic dataToDelete) {
-    imports = dataToDelete['imports'];
-    methods = dataToDelete['methods'];
-    declarations = dataToDelete['declarations'];
+    imports = dataToDelete['imports'].cast<String>();
+    methods = dataToDelete['methods'].cast<String>();
+    declarations = dataToDelete['declarations'].cast<String>();
   }
 
 }

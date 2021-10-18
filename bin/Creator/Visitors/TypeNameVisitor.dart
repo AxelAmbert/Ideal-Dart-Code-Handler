@@ -10,6 +10,7 @@ class TypeNameVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitTypeName(TypeName node) {
+    print('Jai trouve le type ${node.toString()} + ${node.toString().length}');
     type['len'] = node.toString().length;
   }
 

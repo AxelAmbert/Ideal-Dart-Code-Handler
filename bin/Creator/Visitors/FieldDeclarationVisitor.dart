@@ -28,6 +28,9 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
       name = declaredElement.name.toString();
     });
 
+    if (typename['len'] == 0) {
+      typename['len'] = 3;
+    }
     attributes.add(ConstrainedValue(
         name,
         node.beginToken.charEnd.toInt() -  int.parse(typename['len'].toString()),

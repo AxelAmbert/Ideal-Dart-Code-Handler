@@ -6,9 +6,12 @@ import 'ResolvedMethodVisitor.dart';
 
 class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   List<ConstrainedValue> values;
-  final String classToLookFor;
+  String classToLookFor;
 
-  ResolvedClassVisitor(this.values, this.classToLookFor);
+  ResolvedClassVisitor(this.values, this.classToLookFor) {
+    print(' look ? $classToLookFor');
+    classToLookFor = '_${classToLookFor}PageState';
+  }
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
@@ -23,6 +26,8 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
           node.leftBracket.charEnd.toInt(),
           node.leftBracket.charEnd.toInt(),
           'start-class'));
+    } else {
+      print('Looking for $classToLookFor but got ${declaredElement.name.toString()}');
     }
     node.visitChildren(ResolvedMethodVisitor(values));
     node.visitChildren(FieldDeclarationVisitor(values));

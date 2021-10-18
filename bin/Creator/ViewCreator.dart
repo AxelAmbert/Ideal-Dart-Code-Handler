@@ -13,14 +13,14 @@ class ${viewName}Page extends StatefulWidget {
 
 class _${viewName}PageState extends State<${viewName}Page> {
 
-  _${viewName}PageState() {
-    @override
+  _${viewName}PageState() {}
+  
+  @override
     Widget build(BuildContext context) {
       return Scaffold(
           body: idealScaffold()
       );
     }
-  }
 }
 """;
   }
