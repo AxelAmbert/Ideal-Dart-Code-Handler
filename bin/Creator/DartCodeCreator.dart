@@ -149,7 +149,7 @@ class DartCodeCreator {
 
   void createMainAndView() {
     final viewPath = path.join(parameters.path, 'lib', parameters.view + '.dart');
-    final mainPath = path.join(parameters.path, 'lib', 'IdealMain.dart');
+    final mainPath = path.join(parameters.path, 'lib', 'main.dart');
     final viewFile = File(viewPath);
     final mainFile = File(mainPath);
 

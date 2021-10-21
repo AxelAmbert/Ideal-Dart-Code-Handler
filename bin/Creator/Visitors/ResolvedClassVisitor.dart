@@ -10,7 +10,7 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
 
   ResolvedClassVisitor(this.values, this.classToLookFor) {
     print(' look ? $classToLookFor');
-    classToLookFor = '_${classToLookFor}PageState';
+    classToLookFor = '_${classToLookFor}State';
   }
 
   @override

@@ -5,20 +5,24 @@ class ViewCreator {
 import 'package:flutter/material.dart';
 
 class $viewName extends StatefulWidget {
-  $viewName({Key key}) : super(key: key);
+  $viewName({Key? key}) : super(key: key);
 
   @override
-  _$viewName createState() => _${viewName}State();
+  _${viewName}State createState() => _${viewName}State();
 }
 
 class _${viewName}State extends State<$viewName> {
 
-  _${viewName}State() {}
+
+  _${viewName}State() {
+    CodeLinkInit();
+    variableInit();
+  }
   
   @override
     Widget build(BuildContext context) {
       return Scaffold(
-          body: idealScaffold()
+          body: placeholder
       );
     }
 }
@@ -30,7 +34,7 @@ class _${viewName}State extends State<$viewName> {
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'routing.dart';
+import 'routes.dart';
 
 Future<void> main() async {
   runApp(
