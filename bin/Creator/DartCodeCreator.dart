@@ -37,7 +37,8 @@ class DartCodeCreator {
   void handleVisit(CompilationUnit unit, String path) {
     //TODO add classToLookFor to select only the right class.
     unit.visitChildren(ImportDirectiveVisitor(constrainedValues));
-    unit.visitChildren(ResolvedClassVisitor(constrainedValues, parameters.view));
+    unit.visitChildren(
+        ResolvedClassVisitor(constrainedValues, parameters.view));
   }
 
   Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
@@ -53,7 +54,6 @@ class DartCodeCreator {
 
     handleVisit(unit, path);
   }
-
 
   async.Future analyzeAllFiles(AnalysisContextCollection collection) async {
     for (AnalysisContext context in collection.contexts) {
@@ -80,7 +80,8 @@ class DartCodeCreator {
   }
 
   DataToDelete getDataToDelete() {
-    final fullPath = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '_mem_del.json');
+    final fullPath = path.join(parameters.path, '.ideal_project', 'handler',
+        'creator', parameters.view + '_mem_del.json');
     var jsonFile;
     var jsonData;
 
@@ -98,9 +99,9 @@ class DartCodeCreator {
     }
   }
 
-  List<String> executeImportWriter(List<String> importList, DataToDelete dataToDelete) {
+  List<String> executeImportWriter(
+      List<String> importList, DataToDelete dataToDelete) {
     final importWriter = ImportWriter(file);
-
 
     importWriter.removeFromFile(dataToDelete.imports, constrainedValues);
     importWriter.addToFile(importList, constrainedValues);
@@ -108,16 +109,19 @@ class DartCodeCreator {
     return importWriter.addedData;
   }
 
-  List<String> executeDeclarationWriter(List<FieldDeclarationData> fieldList, DataToDelete dataToDelete) {
+  List<String> executeDeclarationWriter(
+      List<FieldDeclarationData> fieldList, DataToDelete dataToDelete) {
     final declarationWriter = DeclarationWriter(file);
 
-    declarationWriter.removeFromFile(dataToDelete.declarations, constrainedValues);
+    declarationWriter.removeFromFile(
+        dataToDelete.declarations, constrainedValues);
     declarationWriter.addToFile(fieldList, constrainedValues);
     file = declarationWriter.file;
     return declarationWriter.addedData;
   }
 
-  List<String> executeMethodWriter(List<MethodDeclarationData> methodList, DataToDelete dataToDelete) {
+  List<String> executeMethodWriter(
+      List<MethodDeclarationData> methodList, DataToDelete dataToDelete) {
     final methodWriter = MethodWriter(file);
 
     methodWriter.removeFromFile(dataToDelete.methods, constrainedValues);
@@ -126,29 +130,35 @@ class DartCodeCreator {
     return methodWriter.addedData;
   }
 
-   String executeEveryWriter(CreatorData data, String file, DataToDelete dataToDelete) {
+  String executeEveryWriter(
+      CreatorData data, String file, DataToDelete dataToDelete) {
     final imports = executeImportWriter(data.imports, dataToDelete);
-    final declarations = executeDeclarationWriter(data.fieldDeclarations, dataToDelete);
+    final declarations =
+        executeDeclarationWriter(data.fieldDeclarations, dataToDelete);
     final methods = executeMethodWriter(data.methodDeclarations, dataToDelete);
 
-
     RouteWriter.write(parameters);
-    return (json.encode({'imports':imports, 'methods':methods, 'declarations':declarations}));
+    return (json.encode({
+      'imports': imports,
+      'methods': methods,
+      'declarations': declarations
+    }));
   }
 
   void writeCode(DataToDelete dataToDelete) {
-    final pathToCode = path.join(parameters.path, 'lib', parameters.view + '.dart');
-    final pathToCreatedData = path.join(parameters.path, '.ideal_project', 'handler', 'creator', parameters.view + '_mem_del.json');
+    final pathToCode =
+        path.join(parameters.path, 'lib', parameters.view + '.dart');
+    final pathToCreatedData = path.join(parameters.path, '.ideal_project',
+        'handler', 'creator', parameters.view + '_mem_del.json');
     final data = CreatorData(parameters.code);
     final newDataToDelete = executeEveryWriter(data, file, dataToDelete);
-
     File(pathToCreatedData).writeAsStringSync(newDataToDelete);
     File(pathToCode).writeAsStringSync(file);
   }
 
-
   void createMainAndView() {
-    final viewPath = path.join(parameters.path, 'lib', parameters.view + '.dart');
+    final viewPath =
+        path.join(parameters.path, 'lib', parameters.view + '.dart');
     final mainPath = path.join(parameters.path, 'lib', 'main.dart');
     final viewFile = File(viewPath);
     final mainFile = File(mainPath);
@@ -161,8 +171,6 @@ class DartCodeCreator {
     }
   }
 
-
-
   void createMissingFiles() {
     createMainAndView();
     RouteWriter.write(parameters);
@@ -171,8 +179,8 @@ class DartCodeCreator {
   void creator(Function onEnd) async {
     print('INDEXER DEBUG MODE ACTIVATED');
     final dataToDelete = getDataToDelete();
-    final collection =
-        AnalysisContextCollection(includedPaths: [reconstructViewPath(parameters)]);
+    final collection = AnalysisContextCollection(
+        includedPaths: [reconstructViewPath(parameters)]);
 
     createMissingFiles();
     await analyzeAllFiles(collection);

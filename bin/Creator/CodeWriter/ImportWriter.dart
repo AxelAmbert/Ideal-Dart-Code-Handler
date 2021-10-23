@@ -20,9 +20,10 @@ class ImportWriter extends CodeWriter {
     for (final toRemove in removeList) {
       final fullName = toRemove + '.dart';
 
+
       for (final constrainedValue in importList) {
         if (constrainedValue.type == 'import' &&
-            fullName == constrainedValue.name) {
+            toRemove == constrainedValue.name) {
           constrainedValues.remove(constrainedValue);
           file = ConstraintEditor.removeFromFile(constrainedValue, constrainedValues, file);
           break;
@@ -34,13 +35,13 @@ class ImportWriter extends CodeWriter {
   void addToFile(List<String> importList, List<ConstrainedValue> constrainedValues) {
     for (final importToAdd in importList) {
       print('Trying to add $importToAdd');
-      var name = "import '" + importToAdd;
+      var name = "import '$importToAdd';\n";
 
       var tmp = ConstrainedValue(name, 0, name.length, 'import');
 
       file = ConstraintEditor.addToFile(tmp, constrainedValues, file);
       constrainedValues.add(tmp);
-      addedData.add(name);
+      addedData.add(importToAdd);
     }
   }
 

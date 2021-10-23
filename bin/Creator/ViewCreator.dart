@@ -22,7 +22,10 @@ class _${viewName}State extends State<$viewName> {
   @override
     Widget build(BuildContext context) {
       return Scaffold(
-          body: placeholder
+          body: SafeArea(
+            child: placeholder,
+            top: true,
+          ),
       );
     }
 }
