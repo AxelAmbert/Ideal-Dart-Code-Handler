@@ -25,7 +25,11 @@ class TopLevelVariableVisitor extends SimpleAstVisitor<void> {
 
   @override
   visitTopLevelVariableDeclaration(TopLevelVariableDeclaration node) {
+
     node.variables.variables.forEach((element) {
+      if (element.name.toString().startsWith('_')) {
+        return;
+      }
       variables.add({
         'name': element.name.toString(),
         'type': element.declaredElement.type.toString(),

@@ -63,6 +63,10 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     try {
+      if (node.name.toString().startsWith('_')) {
+        return;
+      }
+
       funcs.add({
         'name': node.name.toString(),
         'parameters': getParameters(node),

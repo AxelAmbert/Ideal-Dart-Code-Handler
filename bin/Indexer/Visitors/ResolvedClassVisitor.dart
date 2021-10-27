@@ -13,6 +13,10 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitClassDeclaration(ClassDeclaration node) {
+
+    if (node.name.toString().startsWith('_')) {
+      return;
+    }
     final newClass = {
       'name': node.name.toString(),
       'methods': [],

@@ -41,6 +41,10 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
     List<dynamic> arr = newClass['methods'];
 
     try {
+      if (node.name.toString().startsWith('_')) {
+        return;
+      }
+
       arr.add({
         'name': node.name.toString(),
         'parameters': getParameters(node.parameters),
