@@ -3,14 +3,14 @@ import 'RouteData.dart';
 class CreatorParameters {
 
   String path = '';
-  String view = '';
-  dynamic code;
+  List<String> views = [];
+  List<dynamic> viewsCode = [];
   List<RouteData> routes = [];
 
   CreatorParameters(dynamic data) {
     path = data['path'];
-    view = data['view'];
-    code = data['code'];
+    views = data['views'].cast<String>();
+    viewsCode = data['viewsCode'];
     data['routes'].forEach((route) {
       routes.add(RouteData(route));
     });

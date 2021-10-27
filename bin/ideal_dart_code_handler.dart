@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'Indexer/DartCodeIndexer.dart';
 import 'Indexer/MiscFunctions.dart';
+import 'Creator/DartCodeViewWriter.dart';
 import 'Creator/DartCodeCreator.dart';
 import 'Indexer/JsonData/IndexerParameters.dart';
 import 'Creator/JsonData/CreatorParameters.dart';
@@ -22,20 +23,26 @@ class Main {
   }
 
 
-  void handleNewMessage(dynamic parsedData) {
+  Future<void> handleNewMessage(dynamic parsedData) async {
     if (parsedData['requestType'] == 'index') {
       DartCodeIndexer(IndexerParameters(parsedData['parameters']), () {});
     } else if (parsedData['requestType'] == 'creator') {
-      DartCodeCreator(CreatorParameters(parsedData['parameters']), () {});
+      await DartCodeCreator(CreatorParameters(parsedData['parameters']), () {}).launchThreads();
     }
   }
 
 
   void main() async {
-    final decoded = utf8.decode(base64Url.decode(args[0]));
+    final file = File(args[0]);
+    var decoded = '';
 
-    print('Le code handler reçoit ${decoded}');
-    handleNewMessage(json.decode(decoded));
+    if (file.existsSync() == false) {
+      throw Exception('File ${args[0]} does not exists');
+    }
+    decoded = file.readAsStringSync();
+    print('Le code handler reçoit $decoded');
+    await handleNewMessage(json.decode(decoded));
+    file.deleteSync();
   }
 }
 

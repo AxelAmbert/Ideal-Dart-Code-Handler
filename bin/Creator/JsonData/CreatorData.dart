@@ -1,8 +1,11 @@
+import 'CreatorParameters.dart';
 import 'FieldDeclarationData.dart';
 import 'MethodDeclarationData.dart';
 
 class CreatorData {
 
+  String view = '';
+  String path = '';
   List<String> imports = [];
   List<MethodDeclarationData> methodDeclarations = [];
   List<FieldDeclarationData> fieldDeclarations = [];
@@ -14,15 +17,19 @@ class CreatorData {
     });
   }
 
-  CreatorData(dynamic data) {
-    addInitToMethod(data);
-    imports = data['imports'].cast<String>();
+  CreatorData(CreatorParameters parameters, int viewIndex) {
+    dynamic code = parameters.viewsCode[viewIndex];
 
-    data['functions'].forEach((methodData) {
+    addInitToMethod(code);
+    imports = code['imports'].cast<String>();
+    view = parameters.views[viewIndex];
+    path = parameters.path;
+
+    code['functions'].forEach((methodData) {
       methodDeclarations.add(MethodDeclarationData(methodData));
     });
 
-    data['declarations'].forEach((declaration) {
+    code['declarations'].forEach((declaration) {
       fieldDeclarations.add(FieldDeclarationData(declaration));
     });
   }
