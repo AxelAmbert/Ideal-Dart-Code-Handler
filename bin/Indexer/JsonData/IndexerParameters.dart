@@ -18,7 +18,7 @@ class IndexerParameters {
   String flutterRoot = '';
 
   void getFlutterPath() {
-    final env = Platform.environment['PATH'].split(';') ?? [];
+    final env = Platform.environment['PATH']?.split(';') ?? [];
     final realPath = Platform.pathSeparator +
         'packages' +
         Platform.pathSeparator +
@@ -58,7 +58,7 @@ class IndexerParameters {
     uselessPath = parameters['pathToIndex'];
     verbose = parameters['verbose'];
     finalPath = parameters['finalPath'];
-    force = parameters['force'];
+    force = parameters['force'] ?? false;
     getFlutterPath();
   }
 

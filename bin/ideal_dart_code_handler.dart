@@ -22,7 +22,6 @@ class Main {
     main();
   }
 
-
   Future<void> handleNewMessage(dynamic parsedData) async {
     if (parsedData['requestType'] == 'index') {
       DartCodeIndexer(IndexerParameters(parsedData['parameters']), () {});
@@ -31,10 +30,11 @@ class Main {
     }
   }
 
-
   void main() async {
     final file = File(args[0]);
     var decoded = '';
+    final mdrLol = '';
+
 
     if (file.existsSync() == false) {
       throw Exception('File ${args[0]} does not exists');

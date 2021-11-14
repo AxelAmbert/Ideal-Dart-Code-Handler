@@ -14,6 +14,7 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   @override
   void visitClassDeclaration(ClassDeclaration node) {
 
+
     if (node.name.toString().startsWith('_')) {
       return;
     }
@@ -23,8 +24,14 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
       'constructors': [],
       'path': path,
       'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath),
+      'extendsAClass?': false,
+      'extends': '',
     };
+    if (node.extendsClause != null) {
 
+      newClass['extendsAClass?'] = true;
+      newClass['extends'] = node.extendsClause!.superclass2.name.toString();
+    }
     node.visitChildren(ResolvedMethodVisitor(newClass));
     classes.add(newClass);
   }

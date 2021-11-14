@@ -10,15 +10,17 @@ class TopLevelVariableVisitor extends SimpleAstVisitor<void> {
   TopLevelVariableVisitor(this.variables);
 
   String getComputedValue(VariableDeclaration element) {
-    final type = element.declaredElement.computeConstantValue();
+    final type = element.declaredElement?.computeConstantValue();
 
-    if (type == null || type.hasKnownValue == false)
+    if (type == null || type.hasKnownValue == false) {
       return ('');
-    else if (type.toBoolValue() != null)
+    } else if (type.toBoolValue() != null) {
       return (type.toBoolValue().toString());
-    else if (type.toStringValue() != null)
-      return (type.toStringValue());
-    else if (type.toIntValue() != null) return (type.toIntValue().toString());
+    } else if (type.toStringValue() != null) {
+      return (type.toStringValue() ?? '');
+    } else if (type.toIntValue() != null) {
+      return (type.toIntValue().toString());
+    }
     return ('');
   }
 
@@ -32,7 +34,7 @@ class TopLevelVariableVisitor extends SimpleAstVisitor<void> {
       }
       variables.add({
         'name': element.name.toString(),
-        'type': element.declaredElement.type.toString(),
+        'type': element.declaredElement?.type.toString(),
         'value': getComputedValue(element)
       });
     });

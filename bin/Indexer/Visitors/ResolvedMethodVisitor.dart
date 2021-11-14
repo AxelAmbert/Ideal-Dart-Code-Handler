@@ -9,13 +9,22 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
 
 
 
-  List<dynamic> getParameters(FormalParameterList list) {
-    final parameterTypes = list.parameterElements.map((e) => {
-      'type': e.type.getDisplayString(withNullability: false),
-      'name': e.name.toString(),
-      'isRequired':
-      (e.hasRequired || e.isRequiredNamed || e.isRequiredPositional)
-          .toString(),
+  List<dynamic> getParameters(FormalParameterList? list) {
+    if (list == null) {
+      return [];
+    }
+
+    final parameterTypes = list.parameterElements.map((e) {
+      if (e == null) {
+        return null;
+      }
+
+      return {'type': e.type.getDisplayString(withNullability: false),
+        'name': e.name.toString(),
+        'isRequired':
+        (e.hasRequired || e.isRequiredNamed || e.isRequiredPositional)
+            .toString(),
+      };
     });
 
     return (parameterTypes.toList());
@@ -41,7 +50,7 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
     List<dynamic> arr = newClass['methods'];
 
     try {
-      if (node.name.toString().startsWith('_')) {
+      if (node.name.toString().startsWith('_') || node == null || node.parameters == null) {
         return;
       }
 
