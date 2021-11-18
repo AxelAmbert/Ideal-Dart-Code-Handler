@@ -7,9 +7,6 @@ import 'ConstraintEditor.dart';
 class DeclarationWriter extends CodeWriter {
   DeclarationWriter(String file) : super(file);
 
-
-
-
   void removeFromFile(List<String> removeList, List<ConstrainedValue> constrainedValues) {
 
     final declarationList = constrainedValues.where((e) => e.type == 'declaration');
@@ -26,7 +23,6 @@ class DeclarationWriter extends CodeWriter {
   }
 
   String getAFullDeclaration(FieldDeclarationData value) {
-    print(value.code);
     var declaration = '\n\t' + value.code;
 
     addedData.add(value.name);

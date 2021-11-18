@@ -8,8 +8,8 @@ class DartCodeCreator {
   Function onEnd;
 
   DartCodeCreator(this.parameters, this.onEnd);
-/*
-  Future<void> launchThreads() async {
+
+  /*Future<void> launchThreads() async {
     final threadPool = <Thread>[];
 
     final stopwatch = new Stopwatch()..start();
@@ -26,8 +26,8 @@ class DartCodeCreator {
     }
     print('Time elapsed + ${stopwatch.elapsed}');
     onEnd();
-  }
-*/
+  }*/
+
   Future<void> launchThreads() async {
 
     RouteWriter.write(parameters);

@@ -9,7 +9,6 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   String classToLookFor;
 
   ResolvedClassVisitor(this.values, this.classToLookFor) {
-    print(' look ? $classToLookFor');
     classToLookFor = '_${classToLookFor}State';
   }
 
@@ -17,17 +16,16 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
   void visitClassDeclaration(ClassDeclaration node) {
     final declaredElement = node.declaredElement;
 
-    if (declaredElement == null) {
+    /*if (declaredElement == null) {
       return;
-    }
-    if (declaredElement.name.toString() == classToLookFor) {
+    }*/
+    if (node.name.toString() == classToLookFor) {
       values.add(ConstrainedValue(
           node.name.toString(),
           node.leftBracket.charEnd.toInt(),
           node.leftBracket.charEnd.toInt(),
           'start-class'));
     } else {
-      print('Looking for $classToLookFor but got ${declaredElement.name.toString()}');
     }
     node.visitChildren(ResolvedMethodVisitor(values));
     node.visitChildren(FieldDeclarationVisitor(values));

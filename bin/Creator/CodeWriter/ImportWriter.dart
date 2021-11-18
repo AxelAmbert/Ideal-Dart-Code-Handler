@@ -17,11 +17,13 @@ class ImportWriter extends CodeWriter {
       List<ConstrainedValue> constrainedValues) {
     final importList = constrainedValues.where((e) => e.type == 'import');
 
-    for (final toRemove in removeList) {
+    for (var toRemove in removeList) {
       final fullName = toRemove + '.dart';
+      toRemove = "'$toRemove'";
 
 
       for (final constrainedValue in importList) {
+        print('Try import ${constrainedValue.name} with $toRemove ? ${constrainedValue.type == 'import'} - ${toRemove == constrainedValue.name}');
         if (constrainedValue.type == 'import' &&
             toRemove == constrainedValue.name) {
           constrainedValues.remove(constrainedValue);

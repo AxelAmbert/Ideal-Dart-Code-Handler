@@ -101,7 +101,6 @@ class DartCodeIndexer {
           continue;
         }
         await analyzeSingleFile(context, path);
-        print('End of the analyzis of ${path}');
       }
     }
   }

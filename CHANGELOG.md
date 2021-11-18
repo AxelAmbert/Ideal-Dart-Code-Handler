@@ -37,3 +37,18 @@
 
 ## 1.2.8
 - The Code Handler now takes a path to a file instead of a base64 JSON, so it is not limited to the size of the command line
+
+## 1.2.9
+- Now handles private classes/functions/const variables
+
+## 1.3.0
+- Is fully null sound
+
+## 1.3.1
+- Resolve a null sound issue
+
+## 1.3.2
+- Now force null sound safety (threads are removed) and create an "inheritance" field
+
+## 1.3.3
+- The Code Creator does not use resolved AST anymore but unresolved AST 

@@ -42,9 +42,9 @@ class DartCodeViewWriter {
   }
 
   Future<CompilationUnit> getUnit(String path, AnalysisSession session) async {
-    ResolvedUnitResult placeholder;
+    ParsedUnitResult placeholder;
 
-    placeholder = (await session.getResolvedUnit(path)) as ResolvedUnitResult;
+    placeholder = (await session.getParsedUnit(path)) as ParsedUnitResult;
     return (placeholder.unit);
   }
 
@@ -146,6 +146,7 @@ class DartCodeViewWriter {
     final pathToCreatedData = path.join(creatorData.path, '.ideal_project',
         'handler', 'creator', creatorData.view + '_mem_del.json');
     final newDataToDelete = executeEveryWriter(file, dataToDelete);
+
     File(pathToCreatedData).writeAsStringSync(newDataToDelete);
     File(pathToCode).writeAsStringSync(file);
   }
@@ -171,8 +172,8 @@ class DartCodeViewWriter {
   }
 
   Future<void> creator() async {
-    print('INDEXER DEBUG MODE ACTIVATED');
     final dataToDelete = getDataToDelete();
+    print(reconstructViewPath());
     final collection = AnalysisContextCollection(
         includedPaths: [reconstructViewPath()]);
 

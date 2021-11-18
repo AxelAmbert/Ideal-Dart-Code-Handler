@@ -10,9 +10,7 @@ import 'Visitors/GetAnnotationTypes.dart';
 String removePrefixFromPath(String path, flutterPath, uselessPath) {
   final separator = Platform.pathSeparator;
 
-  print('Flutter path ${flutterPath}');
   if (path.startsWith(flutterPath)) {
-    print('It starts with a flutter path');
     var builder = path.replaceAll(flutterPath, '');
     var split = builder.split(separator);
 
@@ -23,7 +21,6 @@ String removePrefixFromPath(String path, flutterPath, uselessPath) {
     builder = 'package:flutter/' + split[2] + '.dart';
     return (builder);
   } else {
-    print('it does not starts with a flutter path');
     path = path.replaceAll(uselessPath, '').replaceAll('\\', '/');
     path = 'codelink/user$path';
   }

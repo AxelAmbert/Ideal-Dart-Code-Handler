@@ -31,6 +31,7 @@ class Main {
   }
 
   void main() async {
+    print(args);
     final file = File(args[0]);
     var decoded = '';
     final mdrLol = '';
@@ -40,9 +41,9 @@ class Main {
       throw Exception('File ${args[0]} does not exists');
     }
     decoded = file.readAsStringSync();
-    print('Le code handler reçoit $decoded');
+    //print('Le code handler reçoit $decoded');
     await handleNewMessage(json.decode(decoded));
-    file.deleteSync();
+    //file.deleteSync();
   }
 }
 
