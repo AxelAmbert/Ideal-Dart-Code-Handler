@@ -16,7 +16,6 @@ class Main {
 
     if (args.length < 1) {
       print('Wrong number of argument, should at least be 1');
-      print(args);
       return;
     }
     main();

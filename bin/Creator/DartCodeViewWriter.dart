@@ -173,7 +173,6 @@ class DartCodeViewWriter {
 
   Future<void> creator() async {
     final dataToDelete = getDataToDelete();
-    print(reconstructViewPath());
     final collection = AnalysisContextCollection(
         includedPaths: [reconstructViewPath()]);
 

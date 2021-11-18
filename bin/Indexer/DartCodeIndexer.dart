@@ -109,14 +109,11 @@ class DartCodeIndexer {
 
   void writeEverything() {
     final fullPath = programArgs.finalPath + (programArgs.finalPath.endsWith(Platform.pathSeparator) ? '' : Platform.pathSeparator);
-
-    //File(fullPath + 'classes.json').createSync(recursive: true);
-//    File(fullPath + 'classes.json').writeAsString(jsonEncode(theClasses));
-
-  //  File(fullPath + 'inheritance.json').writeAsString(jsonEncode(inheritanceTree));
+    final fileObj = File(fullPath + 'data.json');
 
     file = {'funcs': funcs, 'classes': classes, 'constValues': variables};
-    File(fullPath + 'data.json').writeAsString(jsonEncode(file));
+    fileObj.createSync(recursive: true);
+    fileObj.writeAsString(jsonEncode(file));
   }
 
 

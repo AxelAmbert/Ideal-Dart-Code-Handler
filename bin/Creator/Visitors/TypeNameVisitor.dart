@@ -10,13 +10,11 @@ class TypeNameVisitor extends SimpleAstVisitor<void> {
 
   @override
   void visitNamedType(NamedType node) {
-    print(' -> $node');
     type['len'] = node.toString().length;
   }
 
   @override
   void visitVariableDeclarationList(VariableDeclarationList node) {
-    print('List -> $node');
     node.visitChildren(TypeNameVisitor(type));
   }
 }

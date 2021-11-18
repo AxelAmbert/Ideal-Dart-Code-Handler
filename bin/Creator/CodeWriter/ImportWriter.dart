@@ -23,7 +23,6 @@ class ImportWriter extends CodeWriter {
 
 
       for (final constrainedValue in importList) {
-        print('Try import ${constrainedValue.name} with $toRemove ? ${constrainedValue.type == 'import'} - ${toRemove == constrainedValue.name}');
         if (constrainedValue.type == 'import' &&
             toRemove == constrainedValue.name) {
           constrainedValues.remove(constrainedValue);
@@ -36,7 +35,6 @@ class ImportWriter extends CodeWriter {
 
   void addToFile(List<String> importList, List<ConstrainedValue> constrainedValues) {
     for (final importToAdd in importList) {
-      print('Trying to add $importToAdd');
       var name = "import '$importToAdd';\n";
 
       var tmp = ConstrainedValue(name, 0, name.length, 'import');

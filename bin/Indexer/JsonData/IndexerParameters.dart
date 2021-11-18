@@ -51,10 +51,6 @@ class IndexerParameters {
     List<String> tmp;
 
     pathToIndex = handlePath(parameters['pathToIndex']);
-    /*tmp = parameters['pathToIndex'].split(Platform.pathSeparator);
-    print(tmp);
-    tmp.removeAt(tmp.length - 1);
-    uselessPath = tmp.reduce((value, element) => value + Platform.pathSeparator + element) + Platform.pathSeparator;*/
     uselessPath = parameters['pathToIndex'];
     verbose = parameters['verbose'];
     finalPath = parameters['finalPath'];

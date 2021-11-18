@@ -18,25 +18,12 @@ class FieldDeclarationVisitor extends SimpleAstVisitor<void> {
     final typename = {'len': 0};
 
 
-    print('Field -> $node');
     node.visitChildren(TypeNameVisitor(typename));
     node.fields.variables.forEach((element) {
       name = element.name.toString();
-      print('Name $name');
-      print('Name name ${element.name.toString()}');
-
-      /*
-
-      print('Elem ${element.toString()}');
-      final declaredElement = element.declaredElement;
-
-      if (declaredElement == null) {
-        return;
-      }
-      name = declaredElement.name.toString();
-      print('Name ? $name');*/
     });
 
+    // If it founds no type, assume the type is 'var'
     if (typename['len'] == 0) {
       typename['len'] = 3;
     }
