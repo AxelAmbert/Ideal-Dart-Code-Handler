@@ -26,13 +26,16 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
       'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath),
       'extendsAClass?': false,
       'extends': '',
+      'annotations': getAnnotations(node.metadata)
     };
     if (node.extendsClause != null) {
 
       newClass['extendsAClass?'] = true;
       newClass['extends'] = node.extendsClause!.superclass2.name.toString();
     }
-    node.visitChildren(ResolvedMethodVisitor(newClass));
-    classes.add(newClass);
+    if (isNotHidden(newClass['annotations'])) {
+      node.visitChildren(ResolvedMethodVisitor(newClass));
+      classes.add(newClass);
+    }
   }
 }

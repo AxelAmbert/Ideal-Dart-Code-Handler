@@ -45,6 +45,7 @@ Future<void> main() async {
       title: '$appName',
       initialRoute: '/',
       routes: materialRoutes,
+      debugShowCheckedModeBanner: false,
     ),
   );
 }

@@ -52,3 +52,9 @@
 
 ## 1.3.3
 - The Code Creator does not use resolved AST anymore but unresolved AST 
+
+## 1.3.4
+- The Code Creator default behavior remove the debug banner
+
+## 1.3.5
+- Now handle the annotations of the ideal_dart_annotations package (https://pub.dev/packages/ideal_dart_annotations)

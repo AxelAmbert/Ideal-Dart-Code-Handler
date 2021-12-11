@@ -60,24 +60,38 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
     return (params);
   }
 
+  void getBody(FunctionDeclaration node, dynamic element) {
+
+    element['annotations']?.forEach((annotation)  {
+      if (annotation['name'] == 'InlineFunction' ||
+          annotation?['name'] == 'InsideFunction') {
+        element['body'] = node.functionExpression.body.toString();
+      }
+    });
+  }
+
   @override
   void visitFunctionDeclaration(FunctionDeclaration node) {
     try {
       if (node.name.toString().startsWith('_')) {
         return;
       }
-
-      funcs.add({
+      final newElement = {
         'name': node.name.toString(),
         'parameters': getParameters(node),
         'return': node.returnType.toString(),
         'annotations': getAnnotations(node.metadata),
         'path': path,
-        'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath)
-
+        'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath),
+        'body': null,
         //'code': node.functionExpression.body.toString()
-      });
+      };
+      getBody(node, newElement);
+      if (isNotHidden(newElement['annotations'])) {
+        funcs.add(newElement);
+      }
     } catch (e) {
+      print(e);
       return;
     }
   }

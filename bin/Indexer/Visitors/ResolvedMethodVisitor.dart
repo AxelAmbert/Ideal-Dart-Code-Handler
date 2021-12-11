@@ -53,17 +53,20 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
       if (node.name.toString().startsWith('_') || node == null || node.parameters == null) {
         return;
       }
-
-      arr.add({
+      final newMethod = {
         'name': node.name.toString(),
         'parameters': getParameters(node.parameters),
         'return': node.returnType.toString(),
         'annotations': getAnnotations(node.metadata),
         //'code': node.body.toString()
-      });
+      };
+      if (isNotHidden(newMethod['annotations'])) {
+        arr.add(newMethod);
+        newClass['methods'] = arr;
+      }
     } catch (e) {
       return;
     }
-    newClass['methods'] = arr;
+
   }
 }

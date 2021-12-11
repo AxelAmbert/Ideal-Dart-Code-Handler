@@ -40,6 +40,22 @@ List<dynamic> getAnnotations(NodeList<Annotation> annotationsList) {
   return (annotations);
 }
 
+bool isNotHidden(dynamic annotations) {
+  var notHidden = true;
+
+  annotations?.forEach((annotation) {
+    print(annotation);
+    print(annotation['name'] != null);
+    print(annotation['name'] == 'CodeLinkHidden');
+    print(annotation['name'] != null && annotation['name'] == 'CodeLinkHidden');
+    if (annotation['name'] != null && annotation['name'] == 'CodeLinkHidden') {
+      print('FALSE');
+      notHidden = false;
+    }
+  });
+  return notHidden;
+}
+
 
 String constructInheritance(dynamic theClasses, String toFind) {
   final inherited = theClasses[toFind];
