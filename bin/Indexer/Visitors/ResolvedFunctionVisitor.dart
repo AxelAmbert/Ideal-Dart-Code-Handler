@@ -81,11 +81,12 @@ class ResolvedFunctionVisitor extends SimpleAstVisitor<void> {
         'parameters': getParameters(node),
         'return': node.returnType.toString(),
         'annotations': getAnnotations(node.metadata),
-        'path': path,
+        'path': '',
         'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath),
         'body': null,
         //'code': node.functionExpression.body.toString()
       };
+      setCustomPath(newElement);
       getBody(node, newElement);
       if (isNotHidden(newElement['annotations'])) {
         funcs.add(newElement);

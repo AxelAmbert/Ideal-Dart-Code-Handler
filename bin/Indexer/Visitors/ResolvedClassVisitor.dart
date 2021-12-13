@@ -22,14 +22,14 @@ class ResolvedClassVisitor extends SimpleAstVisitor<void> {
       'name': node.name.toString(),
       'methods': [],
       'constructors': [],
-      'path': path,
       'import': removePrefixFromPath(path, programData.flutterLibPath, programData.uselessPath),
       'extendsAClass?': false,
       'extends': '',
-      'annotations': getAnnotations(node.metadata)
+      'annotations': getAnnotations(node.metadata),
+      'path': '',
     };
+    setCustomPath(newClass);
     if (node.extendsClause != null) {
-
       newClass['extendsAClass?'] = true;
       newClass['extends'] = node.extendsClause!.superclass2.name.toString();
     }

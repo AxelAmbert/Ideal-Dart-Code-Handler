@@ -56,6 +56,15 @@ bool isNotHidden(dynamic annotations) {
   return notHidden;
 }
 
+void setCustomPath(dynamic nodeWithAnnotations) {
+  nodeWithAnnotations['annotations']?.forEach((annotation) {
+    if (annotation['name'] == 'CustomCodeLinkPath') {
+      nodeWithAnnotations['path'] = annotation['parameters'][0]['value'];
+    }
+  });
+
+}
+
 
 String constructInheritance(dynamic theClasses, String toFind) {
   final inherited = theClasses[toFind];

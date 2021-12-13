@@ -58,8 +58,10 @@ class ResolvedMethodVisitor extends SimpleAstVisitor<void> {
         'parameters': getParameters(node.parameters),
         'return': node.returnType.toString(),
         'annotations': getAnnotations(node.metadata),
+        'path': '',
         //'code': node.body.toString()
       };
+      setCustomPath(newMethod);
       if (isNotHidden(newMethod['annotations'])) {
         arr.add(newMethod);
         newClass['methods'] = arr;
